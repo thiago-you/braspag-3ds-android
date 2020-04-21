@@ -22,6 +22,10 @@ ext {
     developerName = 'Maurici Ferreira Junior'
     developerEmail = 'm.f.j@hotmail.com'
     developerUrl = "https://github.com/Mauricifj"
+
+    licenseName = 'MIT License'
+    licenseUrl = 'https://github.com/Braspag/braspag-3ds-android/blob/master/LICENSE'
+    allLicenses = ["MIT"]
 }
 
 android {
