@@ -7,6 +7,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import br.com.braspag.Braspag3ds
+import br.com.braspag.data.*
 
 // RESULTS
 const val SUCCESS_STATUS = "SUCCESS"
@@ -32,7 +34,7 @@ class MainActivity : Activity() {
         ioScope.launch {
             // AUTHENTICATION
             braspag3ds.authenticate(
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfbmFtZSI6IkJyYXNwYWcgQ2FuYWlzIFRlc3RzIiwiY2xpZW50X2lkIjoiNmE3YzNmNjAtNWU0NS00MjlkLThiYTEtMGRkNTU4MzhiMWFhIiwic2NvcGVzIjoie1wiU2NvcGVcIjpcIjNEU0F1dGhlbnRpY2F0b3JcIixcIkNsYWltc1wiOlt7XCJOYW1lXCI6XCJNZXJjaGFudE5hbWVcIixcIlZhbHVlc1wiOltcIkxvamEgRXhlbXBsbyBMdGRhXCJdfSx7XCJOYW1lXCI6XCJFc3RhYmxpc2htZW50Q29kZVwiLFwiVmFsdWVzXCI6W1wiMTAwNjk5MzA2OVwiXX0se1wiTmFtZVwiOlwiTUNDXCIsXCJWYWx1ZXNcIjpbXCI1OTEyXCJdfSx7XCJOYW1lXCI6XCJSZWZlcmVuY2VJZFwiLFwiVmFsdWVzXCI6W1wiZTc1MzY4MzQtOWRlYy00ZDJkLWIzMTMtZWJiNTViOTRlM2ZmXCJdfV19IiwiaXNzIjoiaHR0cHM6Ly9hdXRoc2FuZGJveC5icmFzcGFnLmNvbS5iciIsImF1ZCI6IlVWUXhjVUEyY1NKMWZrUTNJVUVuT2lJM2RtOXRmbWw1ZWxCNUpVVXVRV2c9IiwiZXhwIjoxNTg3NDg3NzMzLCJuYmYiOjE1ODc0MDEzMzN9.4WV-r1X9qFCjJ00BNnpQc7o0K0kPO2GpKJ4sWAraX1Y",
+                "<ACCESS-TOKEN>",
                 orderData = OrderData(
                     orderNumber = "123456",
                     currencyCode = "986",
@@ -43,7 +45,7 @@ class MainActivity : Activity() {
                     merchantUrl = "https://www.exemplo.com.br"
                 ),
                 cardData = CardData(
-                    number = "4000000000000002",
+                    number = "4000000000001091",
                     expirationMonth = "01",
                     expirationYear = "2023"
                 ),
