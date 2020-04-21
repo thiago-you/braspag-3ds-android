@@ -70,12 +70,11 @@ bintray {
     user = bintray_user
     key = bintray_key
     publications = ['release']
-    licenses = ['MIT']
     override = true
     pkg {
         repo = bintrayRepo
         name = bintrayName
-        licenses = []
+        licenses = ['MIT']
         publish = true
         vcsUrl = gitUrl
         publicDownloadNumbers = true
