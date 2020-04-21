@@ -69,14 +69,12 @@ if (project.rootProject.file('local.properties').canRead()) {
 bintray {
     user = bintray_user
     key = bintray_key
-
     publications = ['release']
-
     override = true
     pkg {
         repo = bintrayRepo
         name = bintrayName
-        licenses = ['MIT']
+        licenses = []
         publish = true
         vcsUrl = gitUrl
         publicDownloadNumbers = true
