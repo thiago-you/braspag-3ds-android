@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BRASPAG-3DS</string>
+
+    <string name="braspag_message_unsupported_brand">Bandeira não suportada para autenticação.</string>
+    <string name="braspag_message_challenge_suppressed">Desafio suprimido para a autenticação.</string>
+    <string name="braspag_message_error">Erro no processo de autenticação.</string>
+    <string name="braspag_message_unenrolled">Cartão não elegível para autenticação (não autenticável).</string>
+    <string name="braspag_message_failure">Cartão elegível para autenticação, porém o portador finalizou com falha.</string>
+    <string name="braspag_message_success">Cartão elegível para autenticação, e portador autenticou com sucesso.</string>
+</resources>

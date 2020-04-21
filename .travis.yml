@@ -1,0 +1,19 @@
+language: android
+dist: trusty
+android:
+  components:
+    # The BuildTools version used by your project
+    - build-tools-29.0.2
+
+    # The SDK version used to compile your project
+    - android-29
+
+script:
+  - ./gradlew :braspag3ds:clean :braspag3ds:assembleRelease
+
+# deploy section
+deploy:
+  provider: script
+  script: ./gradlew :braspag3ds:bintrayUpload
+  on:
+    branch: master

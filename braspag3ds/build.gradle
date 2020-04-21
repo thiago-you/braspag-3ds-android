@@ -1,0 +1,101 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-android-extensions'
+    id 'com.kezong.fat-aar'
+}
+
+ext {
+    bintrayRepo = 'braspag3ds'
+    bintrayName = 'braspag3ds'
+
+    publishedGroupId = 'br.com.braspag'
+    artifact = 'braspag3ds'
+    libraryVersion = '1.2.0'
+
+    libraryDescription = 'SDK para auxiliar na utilização do 3DS 2.0'
+
+    siteUrl = 'https://github.com/Braspag/braspag-3ds-android'
+    gitUrl = 'https://github.com/Braspag/braspag-3ds-android.git'
+
+    developerId = 'mauricifj'
+    developerName = 'Maurici Ferreira Junior'
+    developerEmail = 'm.f.j@hotmail.com'
+    developerUrl = "https://github.com/Mauricifj"
+}
+
+android {
+    lintOptions {
+        abortOnError false
+    }
+
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName libraryVersion
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles 'custom-proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+Properties properties = new Properties()
+if (project.rootProject.file('local.properties').canRead()) {
+    properties.load(project.rootProject.file("local.properties").newDataInputStream())
+    ext.cardinal_url = properties.getProperty('CARDINAL_URL')
+    ext.cardinal_user = properties.getProperty('CARDINAL_USER')
+    ext.cardinal_key = properties.getProperty('CARDINAL_KEY')
+} else {
+    ext.cardinal_url = System.getenv('CARDINAL_URL')
+    ext.cardinal_user = System.getenv('CARDINAL_USER')
+    ext.cardinal_key = System.getenv('CARDINAL_KEY')
+}
+
+repositories {
+    maven {
+        url cardinal_url
+        credentials {
+            username cardinal_user  // Bintray username
+            password cardinal_key   // Bintray user API Key
+        }
+    }
+}
+
+configurations.embed.transitive = true
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.1.1'
+
+    embed 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.2-1@aar'
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+}
+
+apply from: 'publish.gradle'
