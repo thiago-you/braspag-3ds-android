@@ -11,7 +11,7 @@ ext {
 
     publishedGroupId = 'br.com.braspag'
     artifact = 'braspag3ds'
-    libraryVersion = '1.2.0'
+    libraryVersion = '1.5.0-alpha'
 
     libraryDescription = 'SDK para auxiliar na utilização do 3DS 2.0'
 
