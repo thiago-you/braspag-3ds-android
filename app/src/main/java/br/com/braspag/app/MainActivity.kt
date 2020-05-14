@@ -8,6 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import br.com.braspag.Braspag3ds
+import br.com.braspag.customization.*
 import br.com.braspag.data.*
 
 // RESULTS
@@ -30,11 +31,80 @@ class MainActivity : Activity() {
         // INSTANTIATE
         val braspag3ds = Braspag3ds(Environment.SANDBOX)
 
+        braspag3ds.customize(
+            toolbarCustomization = CustomToolbar(
+                backgroundColor = "#00c1eb",
+                buttonText = "Cancel",
+                headerText = "BRASPAG 3DS",
+                textColor = "#ffffff",
+                textFontName = "font/amaticsc.ttf",
+                textFontSize = 16
+            ),
+            textBoxCustomization = CustomTextBox(
+                borderColor = "#1f567d",
+                borderWidth = 10,
+                cornerRadius = 25,
+                textColor = "#000000",
+                textFontName = "font/amaticsc.ttf",
+                textFontSize = 24
+            ),
+            labelCustomization = CustomLabel(
+                headingTextColor = "#404040",
+                headingTextFontName = "font/amaticsc.ttf",
+                headingTextFontSize = 24,
+                textColor = "#404040",
+                textFontName = "font/amaticsc.ttf",
+                textFontSize = 16
+            ),
+            buttons = listOf(
+                CustomButton(
+                    textColor = "#ffffff",
+                    backgroundColor = "#5ea9d1",
+                    textFontName = "font/amaticsc.ttf",
+                    cornerRadius = 25,
+                    textFontSize = 16,
+                    type = ButtonType.VERIFY
+                ),
+                CustomButton(
+                    textColor = "#ffffff",
+                    backgroundColor = "#5ea9d1",
+                    textFontName = "font/amaticsc.ttf",
+                    cornerRadius = 25,
+                    textFontSize = 16,
+                    type = ButtonType.CONTINUE
+                ),
+                CustomButton(
+                    textColor = "#ffffff",
+                    backgroundColor = "#5ea9d1",
+                    textFontName = "font/amaticsc.ttf",
+                    cornerRadius = 25,
+                    textFontSize = 16,
+                    type = ButtonType.NEXT
+                ),
+                CustomButton(
+                    textColor = "#5ea9d1",
+                    backgroundColor = "#ffffff",
+                    textFontName = "font/amaticsc.ttf",
+                    cornerRadius = 25,
+                    textFontSize = 16,
+                    type = ButtonType.RESEND
+                ),
+                CustomButton(
+                    textColor = "#ff0000",
+                    backgroundColor = "#00c1eb",
+                    textFontName = "font/amaticsc.ttf",
+                    cornerRadius = 25,
+                    textFontSize = 20,
+                    type = ButtonType.CANCEL
+                )
+            )
+        )
+
         // Avoiding NetworkOnMainThreadException
         ioScope.launch {
             // AUTHENTICATION
             braspag3ds.authenticate(
-                "<ACCESS-TOKEN>",
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfbmFtZSI6IkJyYXNwYWcgQ2FuYWlzIFRlc3RzIiwiY2xpZW50X2lkIjoiNmE3YzNmNjAtNWU0NS00MjlkLThiYTEtMGRkNTU4MzhiMWFhIiwic2NvcGVzIjoie1wiU2NvcGVcIjpcIjNEU0F1dGhlbnRpY2F0b3JcIixcIkNsYWltc1wiOlt7XCJOYW1lXCI6XCJNZXJjaGFudE5hbWVcIixcIlZhbHVlc1wiOltcIk1hdXJpY2lcdTAwMjdzIHN0b3JlXCJdfSx7XCJOYW1lXCI6XCJFc3RhYmxpc2htZW50Q29kZVwiLFwiVmFsdWVzXCI6W1wiMTAwNjk5MzA2OVwiXX0se1wiTmFtZVwiOlwiTUNDXCIsXCJWYWx1ZXNcIjpbXCI1OTEyXCJdfSx7XCJOYW1lXCI6XCJSZWZlcmVuY2VJZFwiLFwiVmFsdWVzXCI6W1wiMDMwZGYyYmEtZWIyMC00MDlhLWFlMDktNGI1ZTY4ZDE4OThhXCJdfV19IiwiaXNzIjoiaHR0cHM6Ly9hdXRoc2FuZGJveC5icmFzcGFnLmNvbS5iciIsImF1ZCI6IlVWUXhjVUEyY1NKMWZrUTNJVUVuT2lJM2RtOXRmbWw1ZWxCNUpVVXVRV2c9IiwiZXhwIjoxNTg5MzkzNDg2LCJuYmYiOjE1ODkzMDcwODZ9.HwOjYC_6mPg4nqTAF0J3icAmbaj1YrFW-wPsPeE-wsQ",
                 orderData = OrderData(
                     orderNumber = "123456",
                     currencyCode = "986",
