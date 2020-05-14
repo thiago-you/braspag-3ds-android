@@ -28,11 +28,12 @@ internal open class CardinalHelper(private val environment: Environment) {
         context: Context,
         jwt: String,
         cardNumber: String,
+        uiCustomization: UiCustomization,
         callback: (Boolean, String) -> Unit
     ) {
         try {
             cardinal = Cardinal.getInstance()
-            cardinalConfigure(context)
+            cardinalConfigure(context, uiCustomization)
 
             cardinal.init(jwt, cardNumber, object : CardinalInitService {
                 override fun onSetupCompleted(consumerSessionId: String) {
@@ -54,7 +55,7 @@ internal open class CardinalHelper(private val environment: Environment) {
         }
     }
 
-    private fun cardinalConfigure(context: Context) {
+    private fun cardinalConfigure(context: Context, uiCustomization: UiCustomization) {
         val configParams = CardinalConfigurationParameters()
 
         configParams.environment = if (environment == Environment.SANDBOX) CardinalEnvironment.STAGING else CardinalEnvironment.PRODUCTION
@@ -67,10 +68,9 @@ internal open class CardinalHelper(private val environment: Environment) {
             put(CardinalRenderType.OOB)
             put(CardinalRenderType.HTML)
         })
-
         configParams.renderType = renderType
         configParams.uiType = CardinalUiType.BOTH
-        configParams.uiCustomization = UiCustomization()
+        configParams.uiCustomization = uiCustomization
 
         cardinal.configure(context, configParams)
     }

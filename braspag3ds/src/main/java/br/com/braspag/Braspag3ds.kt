@@ -3,6 +3,7 @@ package br.com.braspag
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import br.com.braspag.customization.*
 import br.com.braspag.data.*
 import br.com.braspag.internal.cardinal.CardinalHelper
 import br.com.braspag.internal.data.ActionCode
@@ -16,6 +17,8 @@ import br.com.braspag.internal.network.BraspagClient
 import br.com.braspag.internal.network.dto.Authentication
 import br.com.braspag.internal.network.dto.RequestOrder
 import br.com.braspag.internal.network.dto.RequestValidate
+import com.cardinalcommerce.shared.models.enums.ButtonType
+import com.cardinalcommerce.shared.userinterfaces.UiCustomization
 
 class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
@@ -23,11 +26,29 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
     private lateinit var accessToken: String
     private val braspagClient: BraspagClient = BraspagClient(environment)
-    private val cardinal: CardinalHelper =
-        CardinalHelper(environment)
-
-
+    private val cardinal: CardinalHelper = CardinalHelper(environment)
     private lateinit var callback: (authResponse: AuthenticationResponse) -> Unit
+    private val uiCustomization = UiCustomization()
+
+    fun customize(
+        toolbarCustomization: CustomToolbar? = null,
+        textBoxCustomization: CustomTextBox? = null,
+        labelCustomization: CustomLabel? = null,
+        buttons: List<CustomButton> = listOf()
+    ) {
+        if (toolbarCustomization != null)
+            uiCustomization.toolbarCustomization = toolbarCustomization
+
+        if (textBoxCustomization != null)
+            uiCustomization.textBoxCustomization = textBoxCustomization
+
+        if (labelCustomization != null)
+            uiCustomization.labelCustomization = labelCustomization
+
+        for (button in buttons) {
+            uiCustomization.setButtonCustomization(button, button.type.value)
+        }
+    }
 
     fun authenticate(
         accessToken: String,
@@ -53,7 +74,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
         // INIT
 
-        initCardinal(activity, order, cardData) { isSuccessful, message ->
+        initCardinal(activity, order, cardData, uiCustomization) { isSuccessful, message ->
             if (isSuccessful) {
                 val enrollData =
                     EnrollData.createInstance(
@@ -236,6 +257,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
         activity: Context,
         order: RequestOrder,
         cardData: CardData,
+        uiCustomization: UiCustomization,
         callback: (isSuccessful: Boolean, message: String) -> Unit
     ) {
         braspagClient.getJwt(order, accessToken) {
@@ -244,7 +266,8 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                 cardinal.cardinalInit(
                     activity,
                     it.result.token,
-                    cardData.number
+                    cardData.number,
+                    uiCustomization
                 ) { isInitSuccessul, msg ->
                     callback.invoke(isInitSuccessul, msg)
                 }
