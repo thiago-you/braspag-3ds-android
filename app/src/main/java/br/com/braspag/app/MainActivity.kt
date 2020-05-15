@@ -104,7 +104,7 @@ class MainActivity : Activity() {
         ioScope.launch {
             // AUTHENTICATION
             braspag3ds.authenticate(
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJjbGllbnRfbmFtZSI6IkJyYXNwYWcgQ2FuYWlzIFRlc3RzIiwiY2xpZW50X2lkIjoiNmE3YzNmNjAtNWU0NS00MjlkLThiYTEtMGRkNTU4MzhiMWFhIiwic2NvcGVzIjoie1wiU2NvcGVcIjpcIjNEU0F1dGhlbnRpY2F0b3JcIixcIkNsYWltc1wiOlt7XCJOYW1lXCI6XCJNZXJjaGFudE5hbWVcIixcIlZhbHVlc1wiOltcIk1hdXJpY2lcdTAwMjdzIHN0b3JlXCJdfSx7XCJOYW1lXCI6XCJFc3RhYmxpc2htZW50Q29kZVwiLFwiVmFsdWVzXCI6W1wiMTAwNjk5MzA2OVwiXX0se1wiTmFtZVwiOlwiTUNDXCIsXCJWYWx1ZXNcIjpbXCI1OTEyXCJdfSx7XCJOYW1lXCI6XCJSZWZlcmVuY2VJZFwiLFwiVmFsdWVzXCI6W1wiMDMwZGYyYmEtZWIyMC00MDlhLWFlMDktNGI1ZTY4ZDE4OThhXCJdfV19IiwiaXNzIjoiaHR0cHM6Ly9hdXRoc2FuZGJveC5icmFzcGFnLmNvbS5iciIsImF1ZCI6IlVWUXhjVUEyY1NKMWZrUTNJVUVuT2lJM2RtOXRmbWw1ZWxCNUpVVXVRV2c9IiwiZXhwIjoxNTg5MzkzNDg2LCJuYmYiOjE1ODkzMDcwODZ9.HwOjYC_6mPg4nqTAF0J3icAmbaj1YrFW-wPsPeE-wsQ",
+                "ACCESS-TOKEN",
                 orderData = OrderData(
                     orderNumber = "123456",
                     currencyCode = "986",
@@ -125,13 +125,13 @@ class MainActivity : Activity() {
                 ),
                 shipToData = ShipToData(
                     sameAsBillTo = true,
-                    addressee = "Rua Jose Joao, 666",
-                    city = "Jundiaí",
+                    addressee = "Rua do Meio, 123",
+                    city = "Praia Grande",
                     country = "BR",
-                    email = "josejoao@gmail.com",
+                    email = "maurici@email.com",
                     state = "SP",
                     shippingMethod = "lowcost",
-                    zipCode = "13306270"
+                    zipCode = "11726-000"
                 ),
                 recurringData = RecurringData(
                     frequency = RecurringFrequency.MONTHLY
