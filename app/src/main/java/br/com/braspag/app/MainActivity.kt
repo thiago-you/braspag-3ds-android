@@ -37,64 +37,64 @@ class MainActivity : Activity() {
                 buttonText = "Cancel",
                 headerText = "BRASPAG 3DS",
                 textColor = "#ffffff",
-                textFontName = "font/amaticsc.ttf",
-                textFontSize = 16
+                textFontName = "font/amatic_sc.ttf",
+                textFontSize = 20
             ),
             textBoxCustomization = CustomTextBox(
                 borderColor = "#1f567d",
                 borderWidth = 10,
                 cornerRadius = 25,
                 textColor = "#000000",
-                textFontName = "font/amaticsc.ttf",
-                textFontSize = 24
+                textFontName = "font/amatic_sc.ttf",
+                textFontSize = 28
             ),
             labelCustomization = CustomLabel(
                 headingTextColor = "#404040",
-                headingTextFontName = "font/amaticsc.ttf",
-                headingTextFontSize = 24,
+                headingTextFontName = "font/amatic_sc.ttf",
+                headingTextFontSize = 28,
                 textColor = "#404040",
-                textFontName = "font/amaticsc.ttf",
-                textFontSize = 16
+                textFontName = "font/amatic_sc.ttf",
+                textFontSize = 20
             ),
             buttons = listOf(
                 CustomButton(
                     textColor = "#ffffff",
                     backgroundColor = "#5ea9d1",
-                    textFontName = "font/amaticsc.ttf",
+                    textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
-                    textFontSize = 16,
+                    textFontSize = 20,
                     type = ButtonType.VERIFY
                 ),
                 CustomButton(
                     textColor = "#ffffff",
                     backgroundColor = "#5ea9d1",
-                    textFontName = "font/amaticsc.ttf",
+                    textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
-                    textFontSize = 16,
+                    textFontSize = 20,
                     type = ButtonType.CONTINUE
                 ),
                 CustomButton(
                     textColor = "#ffffff",
                     backgroundColor = "#5ea9d1",
-                    textFontName = "font/amaticsc.ttf",
+                    textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
-                    textFontSize = 16,
+                    textFontSize = 20,
                     type = ButtonType.NEXT
                 ),
                 CustomButton(
                     textColor = "#5ea9d1",
                     backgroundColor = "#ffffff",
-                    textFontName = "font/amaticsc.ttf",
+                    textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
-                    textFontSize = 16,
+                    textFontSize = 20,
                     type = ButtonType.RESEND
                 ),
                 CustomButton(
                     textColor = "#ff0000",
                     backgroundColor = "#00c1eb",
-                    textFontName = "font/amaticsc.ttf",
+                    textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
-                    textFontSize = 20,
+                    textFontSize = 24,
                     type = ButtonType.CANCEL
                 )
             )
