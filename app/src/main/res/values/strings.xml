@@ -7,4 +7,5 @@
     <string name="braspag_message_unenrolled">Cartão não elegível para autenticação (não autenticável).</string>
     <string name="braspag_message_failure">Cartão elegível para autenticação, porém o portador finalizou com falha.</string>
     <string name="braspag_message_success">Cartão elegível para autenticação, e portador autenticou com sucesso.</string>
+    <string name="braspag_loading">Loading…</string>
 </resources>
