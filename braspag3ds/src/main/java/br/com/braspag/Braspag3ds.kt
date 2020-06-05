@@ -17,7 +17,6 @@ import br.com.braspag.internal.network.BraspagClient
 import br.com.braspag.internal.network.dto.Authentication
 import br.com.braspag.internal.network.dto.RequestOrder
 import br.com.braspag.internal.network.dto.RequestValidate
-import com.cardinalcommerce.shared.models.enums.ButtonType
 import com.cardinalcommerce.shared.userinterfaces.UiCustomization
 
 class Braspag3ds(environment: Environment = Environment.SANDBOX) {
