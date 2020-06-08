@@ -14,3 +14,6 @@
 -keep public class br.com.braspag.data.* {
     *;
 }
+
+-keep class org.bouncycastle.**
+-keep class com.nimbusds.**
