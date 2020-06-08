@@ -3,6 +3,14 @@
 -printmapping out.map
 
 ## keep every public class in this library from being removed or renamed
--keep public class * {
-    public protected *;
+-keep public class br.com.braspag.Braspag3ds {
+    *;
+}
+
+-keep public class br.com.braspag.customization.* {
+    *;
+}
+
+-keep public class br.com.braspag.data.* {
+    *;
 }
