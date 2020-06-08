@@ -11,7 +11,7 @@ ext {
 
     publishedGroupId = 'br.com.braspag'
     artifact = 'braspag3ds'
-    libraryVersion = '1.6.2'
+    libraryVersion = '1.6.3'
 
     libraryDescription = 'SDK para auxiliar na utilização do 3DS 2.0'
 
@@ -87,15 +87,15 @@ configurations.embed.transitive = true
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.2.0'
+    implementation 'androidx.core:core-ktx:1.3.0'
     implementation 'androidx.appcompat:appcompat:1.1.0'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.8.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.1.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
 
-    embed 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.2-1@aar'
+    embed 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-1@aar'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
