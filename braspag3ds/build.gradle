@@ -11,7 +11,7 @@ ext {
 
     publishedGroupId = 'br.com.braspag'
     artifact = 'braspag3ds'
-    libraryVersion = '1.6.3'
+    libraryVersion = '1.6.4'
 
     libraryDescription = 'SDK para auxiliar na utilização do 3DS 2.0'
 
@@ -48,8 +48,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles 'custom-proguard-rules.pro'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
