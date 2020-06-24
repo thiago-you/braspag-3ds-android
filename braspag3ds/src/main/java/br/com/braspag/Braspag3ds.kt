@@ -56,8 +56,8 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
         authOptions: OptionsData? = null,
         billToData: BillToData? = null,
         shipToData: ShipToData? = null,
-        cart: List<CartItemData> = listOf(),
-        deviceData: List<DeviceData> = listOf(),
+        cart: List<CartItemData>? = null,
+        deviceData: List<DeviceData>? = null,
         userData: UserData? = null,
         airlineData: AirlineData? = null,
         recurringData: RecurringData? = null,
@@ -329,7 +329,12 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                         response.authentication.transactionId
                     )
                 )
-            } ?: throw Exception("Error: not enrolled !")
+            } ?: callback.invoke(
+                EnrollResult(
+                    status = EnrollStatus.NOT_ENROLLED,
+                    message = clientResult.errorMessage ?: "Not enrolled"
+                )
+            )
         }
     }
 
