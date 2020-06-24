@@ -1,9 +1,20 @@
 package br.com.braspag.data
 
-enum class TransactionMode(val value: String) {
-    moto("M"),
-    retail("R"),
-    eCommerce("S"),
-    mobile("P"),
-    tablet("T")
+import com.google.gson.annotations.SerializedName
+
+enum class TransactionMode {
+    @SerializedName("M")
+    moto,
+
+    @SerializedName("M")
+    retail,
+
+    @SerializedName("M")
+    eCommerce,
+
+    @SerializedName("M")
+    mobile,
+
+    @SerializedName("M")
+    tablet
 }

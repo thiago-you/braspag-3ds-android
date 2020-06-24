@@ -1,6 +1,11 @@
 package br.com.braspag.data
 
-enum class PaymentMethod(val value: String) {
-    credit("credit"),
-    debit("debit")
+import com.google.gson.annotations.SerializedName
+
+enum class PaymentMethod {
+    @SerializedName("credit")
+    credit,
+
+    @SerializedName("debit")
+    debit
 }

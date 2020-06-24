@@ -1,8 +1,17 @@
 package br.com.braspag.data
 
-enum class AuthenticationMethod(val value: Int) {
-    noAuthentication(1),
-    ownStoreLogin(2),
-    federeatedLogin(3),
-    fidoAuthenticatior(4)
+import com.google.gson.annotations.SerializedName
+
+enum class AuthenticationMethod {
+    @SerializedName("1")
+    noAuthentication,
+
+    @SerializedName("2")
+    ownStoreLogin,
+
+    @SerializedName("3")
+    federeatedLogin,
+
+    @SerializedName("4")
+    fidoAuthenticatior
 }
