@@ -5,7 +5,7 @@ data class OrderData(
     val currencyCode: String = "BRL",
     val totalAmount: Long,
     val paymentMethod: PaymentMethod,
-    val installments: Int,
+    val installments: Int? = null,
     val recurrence: Boolean? = null,
     val productCode: ProductCode? = null,
     val countLast24Hours: Int? = null,
@@ -15,5 +15,5 @@ data class OrderData(
     val marketingOptIn: Boolean? = null,
     val marketingSource: String? = null,
     val transactionMode: TransactionMode? = null,
-    val merchantUrl: String
+    val merchantUrl: String? = null
 )
