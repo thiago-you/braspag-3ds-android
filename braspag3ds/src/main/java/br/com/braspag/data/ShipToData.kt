@@ -3,7 +3,7 @@ package br.com.braspag.data
 data class ShipToData(
     val sameAsBillTo: Boolean? = null,
     val addressee: String? = null,
-    val phoneNumber: Long? = null,
+    val phoneNumber: String? = null,
     val email: String? = null,
     val street1: String? = null,
     val street2: String? = null,
