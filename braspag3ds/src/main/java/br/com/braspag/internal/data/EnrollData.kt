@@ -6,11 +6,13 @@ import com.google.gson.annotations.SerializedName
 internal data class EnrollData(
 
     // order data
-    val transactionId: String? = null,
-    val transactionMode: String? = null,
 
+    val transactionId: String? = null,
+    val transactionMode: TransactionMode? = null,
+
+    @SerializedName("merchanturl")
     val merchantUrl: String? = null,
-    val merchantNewCustomer: String? = null,
+    val merchantNewCustomer: Boolean? = null,
 
     @SerializedName("OrderNumber")
     val orderNumber: String, // required
@@ -20,6 +22,7 @@ internal data class EnrollData(
 
     @SerializedName("totalamount")
     val totalAmount: Long? = null,
+
     val installments: Int? = null,
 
     @SerializedName("cardnumber")
@@ -35,7 +38,7 @@ internal data class EnrollData(
     val defaultCard: Boolean? = null,
 
     @SerializedName("paymentmethod")
-    val paymentMethod: String? = null,
+    val paymentMethod: PaymentMethod? = null,
 
     val cardAddedDate: String? = null,
 
@@ -65,19 +68,19 @@ internal data class EnrollData(
     val shipToFirstUsageDate: String? = null,
     val shipToCountry: String? = null,
 
-    val cart: List<CartItemData>? = listOf(),
+    val cart: List<CartItemData>? = null,
 
     val deviceIpAddress: String? = null,
 
-    val device: List<DeviceData>? = listOf(),
+    val device: List<DeviceData>? = null,
 
     val orderRecurrence: Boolean? = null,
-    val orderProductCode: String? = null,
+    val orderProductCode: ProductCode? = null,
     val orderCountLast24Hours: Int? = null,
     val orderCountLast6Months: Int? = null,
     val orderCountLast1Year: Int? = null,
     val orderCardAttemptsLast24Hours: Int? = null,
-    val orderMarketingOptin: String? = null,
+    val orderMarketingOptin: Boolean? = null,
     val orderMarketSource: String? = null,
 
     // user data
@@ -85,13 +88,13 @@ internal data class EnrollData(
     val userAccountCreateDate: String? = null,
     val userAccountChangeDate: String? = null,
     val userAccountPasswordChangedDate: String? = null,
-    val userAccountAuthenticationMethod: String? = null,
+    val userAccountAuthenticationMethod: AuthenticationMethod? = null,
     val userAccountAuthenticationProtocol: String? = null,
     val userAccountAuthenticationTimestamp: String? = null,
 
     // airline company info
-    val airlineTravelLeg: List<TravelLeg>? = listOf(),
-    val airlinePassenger: List<Passenger>? = listOf(),
+    val airlineTravelLeg: List<TravelLeg>? = null,
+    val airlinePassenger: List<Passenger>? = null,
     val airlineNumberOfPassengers: Long? = null,
     val airlineBillToPassportCountry: String? = null,
     val airlineBillToPassportNumber: String? = null,
@@ -111,7 +114,7 @@ internal data class EnrollData(
     val authSuppressChallenge: Boolean? = null,
 
     val recurringEndDate: String? = null,
-    val recurringFrequency: Int? = null,
+    val recurringFrequency: RecurringFrequency? = null,
     val recurringOriginalPurchaseDate: String? = null
 
 ) {
@@ -123,8 +126,8 @@ internal data class EnrollData(
             authOptions: OptionsData?,
             billTo: BillToData?,
             shipTo: ShipToData?,
-            cart: List<CartItemData> = listOf(),
-            device: List<DeviceData> = listOf(),
+            cart: List<CartItemData>? = null,
+            device: List<DeviceData>? = null,
             user: UserData?,
             airline: AirlineData?,
             mdd: MddData?,
@@ -134,17 +137,17 @@ internal data class EnrollData(
             orderNumber = order.orderNumber,
             currency = order.currencyCode,
             totalAmount = order.totalAmount,
-            paymentMethod = order.paymentMethod.value,
+            paymentMethod = order.paymentMethod,
             installments = order.installments,
             orderRecurrence = order.recurrence,
-            orderProductCode = order.productCode?.value,
+            orderProductCode = order.productCode,
             orderCountLast24Hours = order.countLast24Hours,
             orderCountLast6Months = order.countLast6Months,
             orderCountLast1Year = order.countLast1Year,
             orderCardAttemptsLast24Hours = order.cardAttemptsLast24Hours,
-            orderMarketingOptin = order.marketingOptIn.toString(),
+            orderMarketingOptin = order.marketingOptIn,
             orderMarketSource = order.marketingSource,
-            transactionMode = order.transactionMode?.value,
+            transactionMode = order.transactionMode,
             merchantUrl = order.merchantUrl,
 
             cardNumber = card.number,
@@ -169,7 +172,7 @@ internal data class EnrollData(
 
             shipToSameAddressAsBillTo = shipTo?.sameAsBillTo,
             shipToAddressee = shipTo?.addressee,
-            shipToPhoneNumber = shipTo?.phoneNumber?.toString(),
+            shipToPhoneNumber = shipTo?.phoneNumber,
             shipToEmail = shipTo?.email,
             shipToStreet1 = shipTo?.street1,
             shipToStreet2 = shipTo?.street2,
@@ -187,11 +190,11 @@ internal data class EnrollData(
             userAccountCreateDate = user?.createdDate,
             userAccountChangeDate = user?.changedDate,
             userAccountPasswordChangedDate = user?.passwordChangedDate,
-            userAccountAuthenticationMethod = user?.authenticationMethod?.value.toString(),
+            userAccountAuthenticationMethod = user?.authenticationMethod,
             userAccountAuthenticationProtocol = user?.authenticationProtocol,
             userAccountAuthenticationTimestamp = user?.authenticationTimestamp,
 
-            merchantNewCustomer = user?.newCustomer.toString(),
+            merchantNewCustomer = user?.newCustomer,
 
             airlineTravelLeg = airline?.travelLeg,
             airlinePassenger = airline?.passenger,
@@ -200,7 +203,7 @@ internal data class EnrollData(
             airlineBillToPassportNumber = airline?.billToPassportNumber,
 
             recurringEndDate = recurring?.endDate,
-            recurringFrequency = recurring?.frequency?.value,
+            recurringFrequency = recurring?.frequency,
             recurringOriginalPurchaseDate = recurring?.originalPurchaseDate,
 
             mdd1 = mdd?.mdd1,
