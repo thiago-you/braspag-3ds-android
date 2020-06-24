@@ -19,5 +19,9 @@
     public protected *;
 }
 
+-keep class br.com.braspag.internal.data.* {
+    *;
+}
+
 -keep class org.bouncycastle.**
 -keep class com.nimbusds.**
