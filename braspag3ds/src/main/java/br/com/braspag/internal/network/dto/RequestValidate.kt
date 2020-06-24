@@ -1,5 +1,6 @@
 package br.com.braspag.internal.network.dto
 
+import br.com.braspag.data.PaymentMethod
 import com.google.gson.annotations.SerializedName
 
 internal data class RequestValidate(
@@ -13,7 +14,7 @@ internal data class RequestValidate(
     val totalAmount: Long?,
 
     @SerializedName("PaymentMethod")
-    val paymentMethod: String?,
+    val paymentMethod: PaymentMethod?,
 
     @SerializedName("CardNumber")
     val cardNumber: String,
