@@ -6,15 +6,15 @@ enum class TransactionMode {
     @SerializedName("M")
     moto,
 
-    @SerializedName("M")
+    @SerializedName("R")
     retail,
 
-    @SerializedName("M")
+    @SerializedName("S")
     eCommerce,
 
-    @SerializedName("M")
+    @SerializedName("P")
     mobile,
 
-    @SerializedName("M")
+    @SerializedName("T")
     tablet
 }
