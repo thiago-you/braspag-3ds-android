@@ -3,15 +3,15 @@ package br.com.braspag.data
 import com.google.gson.annotations.SerializedName
 
 enum class AuthenticationMethod {
-    @SerializedName("1")
+    @SerializedName("01")
     noAuthentication,
 
-    @SerializedName("2")
+    @SerializedName("02")
     ownStoreLogin,
 
-    @SerializedName("3")
+    @SerializedName("03")
     federeatedLogin,
 
-    @SerializedName("4")
-    fidoAuthenticatior
+    @SerializedName("04")
+    fidoAuthenticator
 }
