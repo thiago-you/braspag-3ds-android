@@ -55,7 +55,7 @@ internal data class EnrollData(
     val billToCountry: String? = null,
 
     // shipping address
-    val shipToSameAddressAsBillTo: Boolean? = null,
+    val shipToSameAsBillTo: Boolean? = null,
     val shipToAddressee: String? = null,
     val shipToPhoneNumber: String? = null,
     val shipToEmail: String? = null,
@@ -81,12 +81,12 @@ internal data class EnrollData(
     val orderCountLast1Year: Int? = null,
     val orderCardAttemptsLast24Hours: Int? = null,
     val orderMarketingOptin: Boolean? = null,
-    val orderMarketSource: String? = null,
+    val orderMarketingSource: String? = null,
 
     // user data
     val userAccountGuest: Boolean? = null,
-    val userAccountCreateDate: String? = null,
-    val userAccountChangeDate: String? = null,
+    val userAccountCreatedDate: String? = null,
+    val userAccountChangedDate: String? = null,
     val userAccountPasswordChangedDate: String? = null,
     val userAccountAuthenticationMethod: AuthenticationMethod? = null,
     val userAccountAuthenticationProtocol: String? = null,
@@ -146,7 +146,7 @@ internal data class EnrollData(
             orderCountLast1Year = order.countLast1Year,
             orderCardAttemptsLast24Hours = order.cardAttemptsLast24Hours,
             orderMarketingOptin = order.marketingOptIn,
-            orderMarketSource = order.marketingSource,
+            orderMarketingSource = order.marketingSource,
             transactionMode = order.transactionMode,
             merchantUrl = order.merchantUrl,
 
@@ -170,7 +170,7 @@ internal data class EnrollData(
             billToZipCode = billTo?.zipCode,
             billToCountry = billTo?.country,
 
-            shipToSameAddressAsBillTo = shipTo?.sameAsBillTo,
+            shipToSameAsBillTo = shipTo?.sameAsBillTo,
             shipToAddressee = shipTo?.addressee,
             shipToPhoneNumber = shipTo?.phoneNumber,
             shipToEmail = shipTo?.email,
@@ -187,8 +187,8 @@ internal data class EnrollData(
             device = device,
 
             userAccountGuest = user?.guest,
-            userAccountCreateDate = user?.createdDate,
-            userAccountChangeDate = user?.changedDate,
+            userAccountCreatedDate = user?.createdDate,
+            userAccountChangedDate = user?.changedDate,
             userAccountPasswordChangedDate = user?.passwordChangedDate,
             userAccountAuthenticationMethod = user?.authenticationMethod,
             userAccountAuthenticationProtocol = user?.authenticationProtocol,
