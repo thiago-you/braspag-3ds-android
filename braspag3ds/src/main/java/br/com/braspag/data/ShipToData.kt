@@ -10,7 +10,7 @@ data class ShipToData(
     val city: String? = null,
     val state: String? = null,
     val zipCode: String? = null,
-    val country: String? = "BR",
+    val country: String? = null,
     val shippingMethod: String? = null,
     val firstUsageDate: String? = null
 )
