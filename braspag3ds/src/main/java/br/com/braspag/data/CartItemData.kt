@@ -1,8 +1,5 @@
 package br.com.braspag.data
 
-import androidx.annotation.Keep
-
-@Keep
 data class CartItemData(
     val name: String,
     val description: String? = null,
