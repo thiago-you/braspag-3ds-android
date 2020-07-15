@@ -21,7 +21,7 @@ import com.cardinalcommerce.shared.userinterfaces.UiCustomization
 
 class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
-    private val TAG = "THREEDS_TAG"
+    private val TAG = "Braspag3ds"
 
     private lateinit var accessToken: String
     private val braspagClient: BraspagClient = BraspagClient(environment)
@@ -75,6 +75,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
         initCardinal(activity, order, cardData, uiCustomization) { isSuccessful, message ->
             if (isSuccessful) {
+
                 val enrollData =
                     EnrollData.createInstance(
                         orderData,
