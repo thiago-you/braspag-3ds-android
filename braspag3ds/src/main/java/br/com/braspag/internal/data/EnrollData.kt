@@ -1,45 +1,26 @@
 package br.com.braspag.internal.data
 
 import br.com.braspag.data.*
-import com.google.gson.annotations.SerializedName
 
 internal data class EnrollData(
 
     // order data
-
     val transactionId: String? = null,
-    val transactionMode: TransactionMode? = null,
-
-    @SerializedName("merchanturl")
+    val transactionMode: String? = null,
     val merchantUrl: String? = null,
     val merchantNewCustomer: Boolean? = null,
-
-    @SerializedName("OrderNumber")
     val orderNumber: String, // required
-
-    @SerializedName("Currency")
     val currency: String, // required
-
-    @SerializedName("totalamount")
     val totalAmount: Long? = null,
-
     val installments: Int? = null,
-
-    @SerializedName("cardnumber")
-    val cardNumber: String, // required
-
-    @SerializedName("cardexpirationmonth")
-    val cardExpirationMonth: String, // required
-
-    @SerializedName("cardexpirationyear")
-    val cardExpirationYear: String,  // required
-
-    val cardAlias: String? = null,
-    val defaultCard: Boolean? = null,
-
-    @SerializedName("paymentmethod")
     val paymentMethod: PaymentMethod? = null,
 
+    // card
+    val cardNumber: String, // required
+    val cardExpirationMonth: String, // required
+    val cardExpirationYear: String,  // required
+    val cardAlias: String? = null,
+    val defaultCard: Boolean? = null,
     val cardAddedDate: String? = null,
 
     // billing address
@@ -75,7 +56,7 @@ internal data class EnrollData(
     val device: List<DeviceData>? = null,
 
     val orderRecurrence: Boolean? = null,
-    val orderProductCode: ProductCode? = null,
+    val orderProductCode: String? = null,
     val orderCountLast24Hours: Int? = null,
     val orderCountLast6Months: Int? = null,
     val orderCountLast1Year: Int? = null,
@@ -88,7 +69,7 @@ internal data class EnrollData(
     val userAccountCreatedDate: String? = null,
     val userAccountChangedDate: String? = null,
     val userAccountPasswordChangedDate: String? = null,
-    val userAccountAuthenticationMethod: AuthenticationMethod? = null,
+    val userAccountAuthenticationMethod: String? = null,
     val userAccountAuthenticationProtocol: String? = null,
     val userAccountAuthenticationTimestamp: String? = null,
 
@@ -107,14 +88,12 @@ internal data class EnrollData(
     val mdd5: String? = null,
 
     // auth options
-    @SerializedName("authnotifyonly")
     val authNotifyOnly: Boolean? = null,
 
-    @SerializedName("authsuppresschallenge")
     val authSuppressChallenge: Boolean? = null,
 
     val recurringEndDate: String? = null,
-    val recurringFrequency: RecurringFrequency? = null,
+    val recurringFrequency: Int? = null,
     val recurringOriginalPurchaseDate: String? = null
 
 ) {
@@ -140,14 +119,14 @@ internal data class EnrollData(
             paymentMethod = order.paymentMethod,
             installments = order.installments,
             orderRecurrence = order.recurrence,
-            orderProductCode = order.productCode,
+            orderProductCode = order.productCode?.value,
             orderCountLast24Hours = order.countLast24Hours,
             orderCountLast6Months = order.countLast6Months,
             orderCountLast1Year = order.countLast1Year,
             orderCardAttemptsLast24Hours = order.cardAttemptsLast24Hours,
             orderMarketingOptin = order.marketingOptIn,
             orderMarketingSource = order.marketingSource,
-            transactionMode = order.transactionMode,
+            transactionMode = order.transactionMode?.value,
             merchantUrl = order.merchantUrl,
 
             cardNumber = card.number,
@@ -190,7 +169,7 @@ internal data class EnrollData(
             userAccountCreatedDate = user?.createdDate,
             userAccountChangedDate = user?.changedDate,
             userAccountPasswordChangedDate = user?.passwordChangedDate,
-            userAccountAuthenticationMethod = user?.authenticationMethod,
+            userAccountAuthenticationMethod = user?.authenticationMethod?.value,
             userAccountAuthenticationProtocol = user?.authenticationProtocol,
             userAccountAuthenticationTimestamp = user?.authenticationTimestamp,
 
@@ -203,7 +182,7 @@ internal data class EnrollData(
             airlineBillToPassportNumber = airline?.billToPassportNumber,
 
             recurringEndDate = recurring?.endDate,
-            recurringFrequency = recurring?.frequency,
+            recurringFrequency = recurring?.frequency?.value,
             recurringOriginalPurchaseDate = recurring?.originalPurchaseDate,
 
             mdd1 = mdd?.mdd1,

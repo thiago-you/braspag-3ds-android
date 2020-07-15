@@ -1,23 +1,10 @@
 package br.com.braspag.data
 
-import com.google.gson.annotations.SerializedName
-
-enum class RecurringFrequency {
-    @SerializedName("1")
-    MONTHLY,
-
-    @SerializedName("2")
-    BIMONTHLY,
-
-    @SerializedName("3")
-    TRIMONTHLY,
-
-    @SerializedName("4")
-    TRIANNUAL,
-
-    @SerializedName("6")
-    SEMIANNUAL,
-
-    @SerializedName("12")
-    YEARLY
+enum class RecurringFrequency(val value: Int) {
+    MONTHLY(1),
+    BIMONTHLY(2),
+    TRIMONTHLY(3),
+    TRIANNUAL(4),
+    SEMIANNUAL(6),
+    YEARLY(12)
 }
