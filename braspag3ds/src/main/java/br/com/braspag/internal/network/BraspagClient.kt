@@ -1,5 +1,7 @@
 package br.com.braspag.internal.network
 
+import android.util.Log
+import br.com.braspag.BuildConfig
 import br.com.braspag.data.Environment
 import br.com.braspag.internal.data.EnrollData
 import br.com.braspag.internal.extensions.HttpStatusCode
@@ -78,7 +80,8 @@ internal class BraspagClient(environment: Environment = Environment.SANDBOX) {
         oauthToken: String,
         callback: (model: ClientResult<ResponseEnroll>) -> Unit
     ) {
-        val call = service.enroll(oauthToken.beared(), enrollData)
+        val xSdkVersion = BuildConfig.X_SDK_VERSION
+        val call = service.enroll(oauthToken.beared(), xSdkVersion, enrollData)
 
         call.enqueue(object : Callback<ResponseEnroll> {
             override fun onFailure(call: Call<ResponseEnroll>, t: Throwable) {

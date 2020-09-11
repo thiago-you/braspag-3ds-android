@@ -17,6 +17,7 @@ internal interface BraspagApi {
     @Headers("Content-Type: application/json")
     fun enroll(
         @Header("Authorization") authorization: String,
+        @Header("x-sdk-version") xSdkVersion: String,
         @Body request: EnrollData
     ): Call<ResponseEnroll>
 
