@@ -11,7 +11,7 @@ ext {
 
     publishedGroupId = 'br.com.braspag'
     artifact = 'braspag3ds'
-    libraryVersion = '1.7.2'
+    libraryVersion = '1.7.3'
 
     libraryDescription = 'SDK para auxiliar na utilização do 3DS 2.0'
 
@@ -52,7 +52,7 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField('String', 'X_SDK_VERSION', "\"Braspag3DS@$libraryVersion\"")
+        it.buildConfigField('String', 'X_SDK_VERSION', "\"3DS-Android@$libraryVersion\"")
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
