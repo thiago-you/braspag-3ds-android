@@ -18,10 +18,10 @@ ext {
     siteUrl = 'https://github.com/Braspag/braspag-3ds-android'
     gitUrl = 'https://github.com/Braspag/braspag-3ds-android.git'
 
-    developerId = 'mauricifj'
-    developerName = 'Maurici Ferreira Junior'
-    developerEmail = 'm.f.j@hotmail.com'
-    developerUrl = "https://github.com/Mauricifj"
+    developerId = 'FelipeToniolo'
+    developerName = 'Felipe Augusto Toniolo'
+    developerEmail = 'ftoniolo.aat@gmail.com'
+    developerUrl = "https://github.com/FelipeToniolo"
 
     licenseName = 'MIT License'
     licenseUrl = 'https://github.com/Braspag/braspag-3ds-android/blob/master/LICENSE'
@@ -97,7 +97,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
 
-    embed 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2@aar'
+    api fileTree(dir: 'libs', include: ['*.aar', '*.jar'], exclude: [])
+    embed files('libs/cardinalmobilesdk-2.2.3-2.aar')
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
