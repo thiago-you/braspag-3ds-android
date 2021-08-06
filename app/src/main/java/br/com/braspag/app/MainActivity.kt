@@ -104,7 +104,7 @@ class MainActivity : Activity() {
         ioScope.launch {
             // AUTHENTICATION
             braspag3ds.authenticate(
-                "ACCESS-TOKEN",
+                "INSERT ACCESS TOKEN",
                 orderData = OrderData(
                     orderNumber = "123456",
                     currencyCode = "986",
