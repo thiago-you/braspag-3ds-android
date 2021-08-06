@@ -125,13 +125,13 @@ class MainActivity : Activity() {
                 ),
                 shipToData = ShipToData(
                     sameAsBillTo = true,
-                    addressee = "Rua do Meio, 123",
-                    city = "Praia Grande",
+                    addressee = "Rua dos Desbravadores, 123",
+                    city = "Osasco",
                     country = "BR",
-                    email = "maurici@email.com",
+                    email = "felipe@email.com",
                     state = "SP",
                     shippingMethod = "lowcost",
-                    zipCode = "11726-000"
+                    zipCode = "06045-170"
                 ),
                 recurringData = RecurringData(
                     frequency = RecurringFrequency.MONTHLY
