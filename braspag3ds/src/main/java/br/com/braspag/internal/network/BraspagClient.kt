@@ -1,6 +1,5 @@
 package br.com.braspag.internal.network
 
-import android.util.Log
 import br.com.braspag.BuildConfig
 import br.com.braspag.data.Environment
 import br.com.braspag.internal.data.EnrollData

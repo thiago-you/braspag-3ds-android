@@ -23,6 +23,10 @@ internal data class EnrollData(
     val defaultCard: Boolean? = null,
     val cardAddedDate: String? = null,
 
+    //gift card
+    val giftCardAmount: Long? = null,
+    val giftCardCurrency: GiftCardCurrency? = null,
+
     // billing address
     val billToCustomerId: String? = null,
     val billToContactName: String? = null,
@@ -102,6 +106,7 @@ internal data class EnrollData(
         fun createInstance(
             order: OrderData,
             card: CardData,
+            giftCard: GiftCardData?,
             authOptions: OptionsData?,
             billTo: BillToData?,
             shipTo: ShipToData?,
@@ -134,6 +139,9 @@ internal data class EnrollData(
             cardExpirationYear = card.expirationYear,
             cardAlias = card.cardAlias,
             defaultCard = card.defaultCard,
+
+            giftCardAmount = giftCard?.giftCardAmount,
+            giftCardCurrency = giftCard?.giftCardCurrency,
 
             authNotifyOnly = authOptions?.notifyOnly,
             authSuppressChallenge = authOptions?.suppressChallenge,

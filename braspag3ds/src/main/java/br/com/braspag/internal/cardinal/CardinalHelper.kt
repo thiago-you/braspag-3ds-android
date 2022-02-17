@@ -3,8 +3,8 @@ package br.com.braspag.internal.cardinal
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import br.com.braspag.internal.data.ActionCode
 import br.com.braspag.data.Environment
+import br.com.braspag.internal.data.ActionCode
 import com.cardinalcommerce.cardinalmobilesdk.Cardinal
 import com.cardinalcommerce.cardinalmobilesdk.enums.CardinalEnvironment
 import com.cardinalcommerce.cardinalmobilesdk.enums.CardinalRenderType
@@ -27,25 +27,26 @@ internal open class CardinalHelper(private val environment: Environment) {
     fun cardinalInit(
         context: Context,
         jwt: String,
-        cardNumber: String,
         uiCustomization: UiCustomization,
         callback: (Boolean, String) -> Unit
     ) {
+
         try {
             cardinal = Cardinal.getInstance()
             cardinalConfigure(context, uiCustomization)
 
-            cardinal.init(jwt, cardNumber, object : CardinalInitService {
+            cardinal.init(jwt, object : CardinalInitService {
                 override fun onSetupCompleted(consumerSessionId: String) {
                     Log.i(TAG, ":::: onSetupCompleted == $consumerSessionId")
                     callback.invoke(true, consumerSessionId)
                 }
 
-                override fun onValidated(validateResponse: ValidateResponse, jwt: String) {
+                override fun onValidated(validateResponse: ValidateResponse, jwt: String?) {
                     Log.i(TAG, ":::: onValidated == $validateResponse")
                     callback.invoke(false, validateResponse.errorNumber.toString())
                 }
             })
+
         } catch (e: Throwable) {
             Log.e(TAG, "Error on cardinalInit: $e")
             if (e.localizedMessage != null)
@@ -58,7 +59,10 @@ internal open class CardinalHelper(private val environment: Environment) {
     private fun cardinalConfigure(context: Context, uiCustomization: UiCustomization) {
         val configParams = CardinalConfigurationParameters()
 
-        configParams.environment = if (environment == Environment.SANDBOX) CardinalEnvironment.STAGING else CardinalEnvironment.PRODUCTION
+        configParams.environment =
+            if (environment == Environment.SANDBOX) CardinalEnvironment.STAGING else CardinalEnvironment.PRODUCTION
+        configParams.requestTimeout = 8000
+        configParams.challengeTimeout = 5
 
         val renderType = JSONArray()
         with(renderType, {
@@ -96,4 +100,6 @@ internal open class CardinalHelper(private val environment: Environment) {
             CardinalActionCode.TIMEOUT -> ActionCode.TIMEOUT
         }
     }
+
+    fun cardinalCleanupInstance() = Cardinal.getInstance().cleanup()
 }

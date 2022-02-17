@@ -53,6 +53,8 @@ android {
     }
     buildTypes.each {
         it.buildConfigField('String', 'X_SDK_VERSION', "\"3DS-Android@$libraryVersion\"")
+        it.buildConfigField('String', 'APP_CENTER_KEY', "\"897ccc34-4dc4-4255-b7eb-131d9c62b5a3\"")
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -79,28 +81,45 @@ repositories {
     maven {
         url cardinal_url
         credentials {
-            username cardinal_user  // Bintray username
-            password cardinal_key   // Bintray user API Key
+            username cardinal_user // Bintray username
+            password cardinal_key  // Bintray user API Key
         }
     }
 }
 
-configurations.embed.transitive = true
+fataar {
+    transitive = true
+}
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.3.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
 
     // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
-    implementation 'com.squareup.retrofit2:converter-gson:2.8.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
+    implementation 'org.conscrypt:conscrypt-android:2.2.1'
+
+    //Entender Fat aar como embed um file aar
+    //SDK Cardinal
+    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
+//    flavor1Embed project(path: ':lib-cardinal', configuration: 'default')
+    implementation project(path: ':lib-cardinal', configuration: 'default')
 
     //SDK Cardinal
-    embed 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2@aar'
+//    implementation 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2@aar'
 
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //JWT.IO
+    implementation 'com.auth0:java-jwt:3.18.1'
+
+    //APPCENTER
+    def appCenterSdkVersion = '4.3.1'
+    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
+    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }

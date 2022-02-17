@@ -3,27 +3,32 @@ package br.com.braspag
 import android.app.Activity
 import android.content.Context
 import android.util.Log
-import br.com.braspag.customization.*
+import br.com.braspag.customization.CustomButton
+import br.com.braspag.customization.CustomLabel
+import br.com.braspag.customization.CustomTextBox
+import br.com.braspag.customization.CustomToolbar
 import br.com.braspag.data.*
 import br.com.braspag.internal.cardinal.CardinalHelper
-import br.com.braspag.internal.data.ActionCode
-import br.com.braspag.internal.data.AuthenticationStatus
-import br.com.braspag.internal.data.EnrollData
-import br.com.braspag.internal.data.EnrollResult
-import br.com.braspag.internal.data.EnrollStatus
+import br.com.braspag.internal.data.*
 import br.com.braspag.internal.extensions.toRequestOrder
 import br.com.braspag.internal.extensions.toRequestValidate
 import br.com.braspag.internal.network.BraspagClient
 import br.com.braspag.internal.network.dto.Authentication
 import br.com.braspag.internal.network.dto.RequestOrder
 import br.com.braspag.internal.network.dto.RequestValidate
+import com.auth0.jwt.JWT
 import com.cardinalcommerce.shared.userinterfaces.UiCustomization
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
+
 
 class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
     private val TAG = "Braspag3ds"
 
     private lateinit var accessToken: String
+    private val staging: Environment = environment
     private val braspagClient: BraspagClient = BraspagClient(environment)
     private val cardinal: CardinalHelper = CardinalHelper(environment)
     private lateinit var callback: (authResponse: AuthenticationResponse) -> Unit
@@ -53,6 +58,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
         accessToken: String,
         orderData: OrderData,
         cardData: CardData,
+        giftCard: GiftCardData? = null,
         authOptions: OptionsData? = null,
         billToData: BillToData? = null,
         shipToData: ShipToData? = null,
@@ -71,15 +77,21 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
         val order = orderData.toRequestOrder()
 
+        AppCenter.start(
+            activity.application, BuildConfig.APP_CENTER_KEY,
+            Analytics::class.java, Crashes::class.java
+        )
         // INIT
+        configAppCenter(accessToken, staging)
 
-        initCardinal(activity, order, cardData, uiCustomization) { isSuccessful, message ->
+        initCardinal(activity, order, uiCustomization) { isSuccessful, message ->
             if (isSuccessful) {
 
                 val enrollData =
                     EnrollData.createInstance(
                         orderData,
                         cardData,
+                        giftCard,
                         authOptions,
                         billToData,
                         shipToData,
@@ -93,7 +105,6 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                     )
 
                 // ENROLL
-
                 enroll(enrollData, accessToken) { enrollResult ->
                     when (enrollResult.status) {
 
@@ -122,7 +133,6 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                                 } else {
 
                                     // CCACONTINUE
-
                                     ccaContinue(
                                         activity,
                                         enrollResult.transactionId,
@@ -256,7 +266,6 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
     private fun initCardinal(
         activity: Context,
         order: RequestOrder,
-        cardData: CardData,
         uiCustomization: UiCustomization,
         callback: (isSuccessful: Boolean, message: String) -> Unit
     ) {
@@ -266,7 +275,6 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                 cardinal.cardinalInit(
                     activity,
                     it.result.token,
-                    cardData.number,
                     uiCustomization
                 ) { isInitSuccessul, msg ->
                     callback.invoke(isInitSuccessul, msg)
@@ -468,5 +476,25 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
             } catch (t: Throwable) {
                 Log.e(TAG, "::::: ERROR on validateCallback - $t")
             }
+            cardinal.cardinalCleanupInstance()
         }
+    private fun configAppCenter(JWTEncoded: String, environment: Environment) {
+
+        val jwt = JWT().decodeJwt(JWTEncoded)
+        val clientId = jwt.getClaim("client_id").asString()
+        val clientName = jwt.getClaim("client_name").asString()
+
+        val properties = HashMap<String, String>()
+        properties["clientId"] = clientId
+        properties["clientName"] = clientName
+
+        when (environment) {
+            Environment.SANDBOX -> {
+                Analytics.trackEvent("SANDBOX", properties)
+            }
+            Environment.PRODUCTION -> {
+                Analytics.trackEvent("PRODUCTION", properties)
+            }
+        }
+    }
 }
