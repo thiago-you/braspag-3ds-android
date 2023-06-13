@@ -31,6 +31,15 @@ android {
         it.buildConfigField('String', 'X_SDK_VERSION', "\"3DS-Android@${rootProject.ext.versionName}\"")
         it.buildConfigField('String', 'APP_CENTER_KEY', "\"897ccc34-4dc4-4255-b7eb-131d9c62b5a3\"")
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
 }
 
 Properties properties = new Properties()
@@ -63,7 +72,7 @@ dependencies {
     implementation project(path: ':lib-cardinal', configuration: 'default')
 
     //SDK Cardinal
-//    implementation 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2@aar'
+    //implementation 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2@aar'
 
     //JWT.IO
     implementation 'com.auth0:java-jwt:3.18.1'

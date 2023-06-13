@@ -24,6 +24,7 @@ import br.com.braspag.data.RecurringData
 import br.com.braspag.data.ShipToData
 import br.com.braspag.data.UserData
 import br.com.braspag.internal.cardinal.CardinalHelper
+import br.com.braspag.internal.components.BraspagJwt
 import br.com.braspag.internal.data.ActionCode
 import br.com.braspag.internal.data.AuthenticationStatus
 import br.com.braspag.internal.data.EnrollData
@@ -35,7 +36,6 @@ import br.com.braspag.internal.network.BraspagClient
 import br.com.braspag.internal.network.dto.Authentication
 import br.com.braspag.internal.network.dto.RequestOrder
 import br.com.braspag.internal.network.dto.RequestValidate
-import com.auth0.jwt.JWT
 import com.cardinalcommerce.shared.userinterfaces.UiCustomization
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
@@ -294,8 +294,8 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                     activity,
                     it.result.token,
                     uiCustomization,
-                ) { isInitSuccessul, msg ->
-                    callback.invoke(isInitSuccessul, msg)
+                ) { isInitSuccessful, msg ->
+                    callback.invoke(isInitSuccessful, msg)
                 }
             } else {
                 callback.invoke(false, it.errorMessage.toString())
@@ -494,13 +494,12 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
             cardinal.cardinalCleanupInstance()
         }
     private fun configAppCenter(JWTEncoded: String, environment: Environment) {
-        val jwt = JWT().decodeJwt(JWTEncoded)
-        val clientId = jwt.getClaim("client_id").asString()
-        val clientName = jwt.getClaim("client_name").asString()
+        val jwt = BraspagJwt(JWTEncoded)
 
-        val properties = HashMap<String, String>()
-        properties["clientId"] = clientId
-        properties["clientName"] = clientName
+        val properties = HashMap<String, String>().apply {
+            this["clientId"] = jwt.clientId
+            this["clientName"] = jwt.clientName
+        }
 
         when (environment) {
             Environment.SANDBOX -> {
