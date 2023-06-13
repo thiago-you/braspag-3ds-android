@@ -23,8 +23,7 @@ internal class BraspagClient(environment: Environment = Environment.SANDBOX) {
         private const val PRODUCTION_URL = "https://mpi.braspag.com.br/"
     }
 
-    private val service =
-        WebClient(getEnvironmentUrl(environment)).createService(BraspagApi::class.java)
+    private val service = WebClient(getEnvironmentUrl(environment)).createService(BraspagApi::class.java)
 
     fun getJwt(
         request: RequestOrder,
