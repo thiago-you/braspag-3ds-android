@@ -7,5 +7,5 @@ internal data class ResponseJWT(
     val referenceId: String,
 
     @SerializedName("Token")
-    val token: String
+    val token: String,
 )

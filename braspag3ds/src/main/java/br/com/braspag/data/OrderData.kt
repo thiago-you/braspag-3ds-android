@@ -11,9 +11,9 @@ data class OrderData(
     val countLast24Hours: Int? = null,
     val countLast6Months: Int? = null,
     val countLast1Year: Int? = null,
-    val cardAttemptsLast24Hours: Int?= null,
+    val cardAttemptsLast24Hours: Int? = null,
     val marketingOptIn: Boolean? = null,
     val marketingSource: String? = null,
     val transactionMode: TransactionMode? = null,
-    val merchantUrl: String? = null
+    val merchantUrl: String? = null,
 )

@@ -34,7 +34,5 @@ internal data class ResponseEnroll(
     val returnMessage: String?,
 
     @SerializedName("Authentication")
-    val authentication: Authentication
+    val authentication: Authentication,
 )
-
-

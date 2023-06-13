@@ -38,6 +38,6 @@ internal data class Authentication(
     val returnCode: String? = null,
 
     @SerializedName("ReturnMessage")
-    val returnMessage: String? = null
+    val returnMessage: String? = null,
 
 )

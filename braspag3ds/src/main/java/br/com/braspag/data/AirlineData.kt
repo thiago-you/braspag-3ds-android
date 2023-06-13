@@ -5,5 +5,5 @@ data class AirlineData(
     val passenger: List<Passenger>? = null,
     val numberOfPassengers: Long? = null,
     val billToPassportCountry: String? = null,
-    val billToPassportNumber: String? = null
+    val billToPassportNumber: String? = null,
 )

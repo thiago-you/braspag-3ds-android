@@ -1,6 +1,6 @@
 package br.com.braspag.internal.network
 
-import br.com.braspag.BuildConfig
+import br.com.braspag.app.BuildConfig
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit.Builder
@@ -16,13 +16,13 @@ internal class WebClient(url: String) {
     private val httpClient = OkHttpClient().newBuilder()
 
     fun <T> createService(service: Class<T>): T {
-
         val logger = HttpLoggingInterceptor()
         logger.level =
-            if (BuildConfig.DEBUG)
+            if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor.Level.BODY
-            else
+            } else {
                 HttpLoggingInterceptor.Level.NONE
+            }
 
         val client = httpClient
             .addInterceptor(logger)

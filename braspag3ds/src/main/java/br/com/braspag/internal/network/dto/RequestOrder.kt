@@ -5,5 +5,5 @@ internal data class RequestOrder(
     val orderNumber: String,
     val currency: String,
     val amount: Long,
-    val objectifyPayload: Boolean = true
+    val objectifyPayload: Boolean = true,
 )

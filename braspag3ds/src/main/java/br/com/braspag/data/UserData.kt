@@ -8,5 +8,5 @@ data class UserData(
     val authenticationMethod: AuthenticationMethod? = null,
     val authenticationProtocol: String? = null,
     val authenticationTimestamp: String? = null,
-    val newCustomer: Boolean? = null
+    val newCustomer: Boolean? = null,
 )

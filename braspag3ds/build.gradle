@@ -1,67 +1,35 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
-    id 'kotlin-android-extensions'
+    id 'kotlin-parcelize'
     id 'com.kezong.fat-aar'
 }
 
-ext {
-    bintrayRepo = 'braspag3ds'
-    bintrayName = 'braspag3ds'
-
-    publishedGroupId = 'br.com.braspag'
-    artifact = 'braspag3ds'
-    libraryVersion = '1.7.3'
-
-    libraryDescription = 'SDK para auxiliar na utilização do 3DS 2.0'
-
-    siteUrl = 'https://github.com/Braspag/braspag-3ds-android'
-    gitUrl = 'https://github.com/Braspag/braspag-3ds-android.git'
-
-    developerId = 'FelipeToniolo'
-    developerName = 'Felipe Augusto Toniolo'
-    developerEmail = 'ftoniolo.aat@gmail.com'
-    developerUrl = "https://github.com/FelipeToniolo"
-
-    licenseName = 'MIT License'
-    licenseUrl = 'https://github.com/Braspag/braspag-3ds-android/blob/master/LICENSE'
-    allLicenses = ["MIT"]
-}
-
 android {
-    lintOptions {
-        abortOnError false
-    }
+    namespace "br.com.braspag.app"
 
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion rootProject.ext.sdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName libraryVersion
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.sdkVersion
 
+        archivesBaseName = "braspag"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    buildTypes.each {
-        it.buildConfigField('String', 'X_SDK_VERSION', "\"3DS-Android@$libraryVersion\"")
-        it.buildConfigField('String', 'APP_CENTER_KEY', "\"897ccc34-4dc4-4255-b7eb-131d9c62b5a3\"")
 
-    }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
+    buildTypes.each {
+        it.buildConfigField('String', 'X_SDK_VERSION', "\"3DS-Android@${rootProject.ext.versionName}\"")
+        it.buildConfigField('String', 'APP_CENTER_KEY', "\"897ccc34-4dc4-4255-b7eb-131d9c62b5a3\"")
     }
 }
 
@@ -77,24 +45,13 @@ if (project.rootProject.file('local.properties').canRead()) {
     ext.cardinal_key = System.getenv('CARDINAL_KEY')
 }
 
-repositories {
-    maven {
-        url cardinal_url
-        credentials {
-            username cardinal_user // Bintray username
-            password cardinal_key  // Bintray user API Key
-        }
-    }
-}
-
 fataar {
     transitive = true
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.6.0'
-    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.6.0'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
@@ -102,10 +59,7 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
-    //Entender Fat aar como embed um file aar
-    //SDK Cardinal
     implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
-//    flavor1Embed project(path: ':lib-cardinal', configuration: 'default')
     implementation project(path: ':lib-cardinal', configuration: 'default')
 
     //SDK Cardinal
@@ -120,6 +74,6 @@ dependencies {
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }

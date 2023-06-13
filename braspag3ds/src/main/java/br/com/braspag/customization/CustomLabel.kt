@@ -8,8 +8,8 @@ class CustomLabel(
     headingTextFontSize: Int,
     textColor: String,
     textFontName: String,
-    textFontSize: Int
-)  : LabelCustomization() {
+    textFontSize: Int,
+) : LabelCustomization() {
     init {
         this.headingTextColor = headingTextColor
         this.headingTextFontName = headingTextFontName

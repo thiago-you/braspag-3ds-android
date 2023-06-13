@@ -6,5 +6,5 @@ internal enum class ActionCode {
     NO_ACTION,
     FAILURE,
     CANCEL,
-    TIMEOUT;
+    TIMEOUT,
 }

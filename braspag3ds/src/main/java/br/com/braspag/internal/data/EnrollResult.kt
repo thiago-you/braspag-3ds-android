@@ -12,5 +12,5 @@ internal data class EnrollResult (
     val eci: String? = null,
     val cavv: String? = null,
     val version: String? = null,
-    val referenceId: String? = null
+    val referenceId: String? = null,
 )

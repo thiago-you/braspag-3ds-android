@@ -1,6 +1,21 @@
 package br.com.braspag.internal.data
 
-import br.com.braspag.data.*
+import br.com.braspag.data.AirlineData
+import br.com.braspag.data.BillToData
+import br.com.braspag.data.CardData
+import br.com.braspag.data.CartItemData
+import br.com.braspag.data.DeviceData
+import br.com.braspag.data.GiftCardCurrency
+import br.com.braspag.data.GiftCardData
+import br.com.braspag.data.MddData
+import br.com.braspag.data.OptionsData
+import br.com.braspag.data.OrderData
+import br.com.braspag.data.Passenger
+import br.com.braspag.data.PaymentMethod
+import br.com.braspag.data.RecurringData
+import br.com.braspag.data.ShipToData
+import br.com.braspag.data.TravelLeg
+import br.com.braspag.data.UserData
 
 internal data class EnrollData(
 
@@ -18,12 +33,12 @@ internal data class EnrollData(
     // card
     val cardNumber: String, // required
     val cardExpirationMonth: String, // required
-    val cardExpirationYear: String,  // required
+    val cardExpirationYear: String, // required
     val cardAlias: String? = null,
     val defaultCard: Boolean? = null,
     val cardAddedDate: String? = null,
 
-    //gift card
+    // gift card
     val giftCardAmount: Long? = null,
     val giftCardCurrency: GiftCardCurrency? = null,
 
@@ -98,7 +113,7 @@ internal data class EnrollData(
 
     val recurringEndDate: String? = null,
     val recurringFrequency: Int? = null,
-    val recurringOriginalPurchaseDate: String? = null
+    val recurringOriginalPurchaseDate: String? = null,
 
 ) {
     companion object {
@@ -116,7 +131,7 @@ internal data class EnrollData(
             airline: AirlineData?,
             mdd: MddData?,
             recurring: RecurringData?,
-            deviceIpAddress: String?
+            deviceIpAddress: String?,
         ) = EnrollData(
             orderNumber = order.orderNumber,
             currency = order.currencyCode,
@@ -199,7 +214,7 @@ internal data class EnrollData(
             mdd4 = mdd?.mdd4,
             mdd5 = mdd?.mdd5,
 
-            deviceIpAddress = deviceIpAddress
+            deviceIpAddress = deviceIpAddress,
         )
     }
 }

@@ -6,5 +6,5 @@ enum class AuthenticationResponseStatus {
     ERROR,
     UNENROLLED,
     UNSUPPORTED_BRAND,
-    CHALLENGE_SUPPRESSION
+    CHALLENGE_SUPPRESSION,
 }

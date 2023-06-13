@@ -1,8 +1,8 @@
 package br.com.braspag.data
 
 enum class AuthenticationMethod(val value: String) {
-    noAuthentication("01"),
-    ownStoreLogin("02"),
-    federeatedLogin("03"),
-    fidoAuthenticatior("04")
+    NO_AUTHENTICATION("01"),
+    OWN_STORE_LOGIN("02"),
+    FEDERATED_LOGIN("03"),
+    FIDO_AUTHENTICATOR("04"),
 }

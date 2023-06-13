@@ -10,5 +10,5 @@ data class BillToData(
     val city: String,
     val state: String,
     val zipCode: String,
-    val country: String
+    val country: String,
 )

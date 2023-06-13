@@ -1,9 +1,9 @@
 package br.com.braspag.data
 
 enum class TransactionMode(val value: String) {
-    moto("M"),
-    retail("R"),
-    eCommerce("S"),
-    mobile("P"),
-    tablet("T")
+    MOTO("M"),
+    RETAIL("R"),
+    ECOMMERCE("S"),
+    MOBILE("P"),
+    TABLET("T"),
 }

@@ -2,13 +2,13 @@ package br.com.braspag.customization
 
 import com.cardinalcommerce.shared.userinterfaces.TextBoxCustomization
 
-class CustomTextBox (
+class CustomTextBox(
     borderColor: String,
     borderWidth: Int,
     cornerRadius: Int,
     textColor: String,
     textFontName: String,
-    textFontSize: Int
+    textFontSize: Int,
 ) : TextBoxCustomization() {
     init {
         this.borderColor = borderColor

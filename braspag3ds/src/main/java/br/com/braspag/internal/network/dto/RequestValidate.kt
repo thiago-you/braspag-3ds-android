@@ -12,5 +12,5 @@ internal data class RequestValidate(
     val cardExpirationYear: String,
     val authNotifyOnly: Boolean?,
     val authSuppressChallenge: Boolean?,
-    val transactionId: String
+    val transactionId: String,
 )

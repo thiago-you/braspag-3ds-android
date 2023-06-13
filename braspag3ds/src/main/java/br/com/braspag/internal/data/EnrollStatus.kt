@@ -7,5 +7,5 @@ internal enum class EnrollStatus {
     NOT_ENROLLED,
     FAILED,
     UNSUPPORTED_BRAND,
-    ERROR
+    ERROR,
 }

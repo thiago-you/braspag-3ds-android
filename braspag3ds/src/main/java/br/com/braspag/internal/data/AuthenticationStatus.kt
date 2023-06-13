@@ -4,6 +4,5 @@ internal enum class AuthenticationStatus {
     AUTHENTICATED,
     UNAVAILABLE,
     FAILED,
-    ERROR_OCCURRED
+    ERROR_OCCURRED,
 }
-

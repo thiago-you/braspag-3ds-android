@@ -18,7 +18,7 @@ internal enum class HttpStatusCode(val code: Int) {
     RetryWith(449),
     InternalServerError(500),
     ServiceUnavailable(503),
-    Unknown(-1)
+    Unknown(-1),
 }
 
 internal fun Int.toStatusCode(): HttpStatusCode = when (this) {

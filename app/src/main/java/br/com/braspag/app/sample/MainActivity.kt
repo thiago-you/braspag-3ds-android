@@ -1,15 +1,31 @@
-package br.com.braspag.app
+package br.com.braspag.app.sample
 
 import android.app.Activity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
+import android.widget.TextView
+import br.com.braspag.Braspag3ds
+import br.com.braspag.customization.ButtonType
+import br.com.braspag.customization.CustomButton
+import br.com.braspag.customization.CustomLabel
+import br.com.braspag.customization.CustomTextBox
+import br.com.braspag.customization.CustomToolbar
+import br.com.braspag.data.AuthenticationMethod
+import br.com.braspag.data.AuthenticationResponse
+import br.com.braspag.data.AuthenticationResponseStatus
+import br.com.braspag.data.CardData
+import br.com.braspag.data.Environment
+import br.com.braspag.data.OptionsData
+import br.com.braspag.data.OrderData
+import br.com.braspag.data.PaymentMethod
+import br.com.braspag.data.RecurringData
+import br.com.braspag.data.RecurringFrequency
+import br.com.braspag.data.ShipToData
+import br.com.braspag.data.TransactionMode
+import br.com.braspag.data.UserData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import br.com.braspag.Braspag3ds
-import br.com.braspag.customization.*
-import br.com.braspag.data.*
 
 // RESULTS
 const val SUCCESS_STATUS = "SUCCESS"
@@ -38,7 +54,7 @@ class MainActivity : Activity() {
                 headerText = "BRASPAG 3DS",
                 textColor = "#ffffff",
                 textFontName = "font/amatic_sc.ttf",
-                textFontSize = 20
+                textFontSize = 20,
             ),
             textBoxCustomization = CustomTextBox(
                 borderColor = "#1f567d",
@@ -46,7 +62,7 @@ class MainActivity : Activity() {
                 cornerRadius = 25,
                 textColor = "#000000",
                 textFontName = "font/amatic_sc.ttf",
-                textFontSize = 28
+                textFontSize = 28,
             ),
             labelCustomization = CustomLabel(
                 headingTextColor = "#404040",
@@ -54,7 +70,7 @@ class MainActivity : Activity() {
                 headingTextFontSize = 28,
                 textColor = "#404040",
                 textFontName = "font/amatic_sc.ttf",
-                textFontSize = 20
+                textFontSize = 20,
             ),
             buttons = listOf(
                 CustomButton(
@@ -63,7 +79,7 @@ class MainActivity : Activity() {
                     textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
                     textFontSize = 20,
-                    type = ButtonType.VERIFY
+                    type = ButtonType.VERIFY,
                 ),
                 CustomButton(
                     textColor = "#ffffff",
@@ -71,7 +87,7 @@ class MainActivity : Activity() {
                     textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
                     textFontSize = 20,
-                    type = ButtonType.CONTINUE
+                    type = ButtonType.CONTINUE,
                 ),
                 CustomButton(
                     textColor = "#ffffff",
@@ -79,7 +95,7 @@ class MainActivity : Activity() {
                     textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
                     textFontSize = 20,
-                    type = ButtonType.NEXT
+                    type = ButtonType.NEXT,
                 ),
                 CustomButton(
                     textColor = "#5ea9d1",
@@ -87,7 +103,7 @@ class MainActivity : Activity() {
                     textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
                     textFontSize = 20,
-                    type = ButtonType.RESEND
+                    type = ButtonType.RESEND,
                 ),
                 CustomButton(
                     textColor = "#ff0000",
@@ -95,9 +111,9 @@ class MainActivity : Activity() {
                     textFontName = "font/amatic_sc.ttf",
                     cornerRadius = 25,
                     textFontSize = 24,
-                    type = ButtonType.CANCEL
-                )
-            )
+                    type = ButtonType.CANCEL,
+                ),
+            ),
         )
 
         // Avoiding NetworkOnMainThreadException
@@ -109,19 +125,19 @@ class MainActivity : Activity() {
                     orderNumber = "123456",
                     currencyCode = "986",
                     totalAmount = 1000L,
-                    paymentMethod = PaymentMethod.credit,
-                    transactionMode = TransactionMode.eCommerce,
+                    paymentMethod = PaymentMethod.CREDIT,
+                    transactionMode = TransactionMode.ECOMMERCE,
                     installments = 3,
-                    merchantUrl = "https://www.exemplo.com.br"
+                    merchantUrl = "https://www.exemplo.com.br",
                 ),
                 cardData = CardData(
                     number = "4000000000001091",
                     expirationMonth = "01",
-                    expirationYear = "2023"
+                    expirationYear = "2023",
                 ),
                 authOptions = OptionsData(
                     notifyOnly = false,
-                    suppressChallenge = false
+                    suppressChallenge = false,
                 ),
                 shipToData = ShipToData(
                     sameAsBillTo = true,
@@ -131,17 +147,17 @@ class MainActivity : Activity() {
                     email = "felipe@email.com",
                     state = "SP",
                     shippingMethod = "lowcost",
-                    zipCode = "06045-170"
+                    zipCode = "06045-170",
                 ),
                 recurringData = RecurringData(
-                    frequency = RecurringFrequency.MONTHLY
+                    frequency = RecurringFrequency.MONTHLY,
                 ),
                 userData = UserData(
                     newCustomer = false,
-                    authenticationMethod = AuthenticationMethod.noAuthentication
+                    authenticationMethod = AuthenticationMethod.NO_AUTHENTICATION,
                 ),
                 activity = this@MainActivity,
-                callback = callback
+                callback = callback,
             )
         }
     }
@@ -151,48 +167,48 @@ class MainActivity : Activity() {
             AuthenticationResponseStatus.SUCCESS -> {
                 showResults(
                     authenticationResponse.toAuthenticationResult(
-                        SUCCESS_STATUS
-                    )
+                        SUCCESS_STATUS,
+                    ),
                 )
             }
 
             AuthenticationResponseStatus.FAILURE -> {
                 showResults(
                     authenticationResponse.toAuthenticationResult(
-                        FAILURE_STATUS
-                    )
+                        FAILURE_STATUS,
+                    ),
                 )
             }
 
             AuthenticationResponseStatus.UNENROLLED -> {
                 showResults(
                     authenticationResponse.toAuthenticationResult(
-                        UNENROLLED_STATUS
-                    )
+                        UNENROLLED_STATUS,
+                    ),
                 )
             }
 
             AuthenticationResponseStatus.UNSUPPORTED_BRAND -> {
                 showResults(
                     authenticationResponse.toAuthenticationResult(
-                        UNSUPPORTED_BRAND_STATUS
-                    )
+                        UNSUPPORTED_BRAND_STATUS,
+                    ),
                 )
             }
 
             AuthenticationResponseStatus.CHALLENGE_SUPPRESSION -> {
                 showResults(
                     authenticationResponse.toAuthenticationResult(
-                        CHALLENGE_SUPPRESSION_STATUS
-                    )
+                        CHALLENGE_SUPPRESSION_STATUS,
+                    ),
                 )
             }
 
             AuthenticationResponseStatus.ERROR -> {
                 showResults(
                     authenticationResponse.toAuthenticationResult(
-                        ERROR_STATUS
-                    )
+                        ERROR_STATUS,
+                    ),
                 )
             }
         }
@@ -201,7 +217,7 @@ class MainActivity : Activity() {
     private fun showResults(authenticationResult: AuthenticationResult) {
         // Avoiding CalledFromWrongThreadException
         runOnUiThread {
-            result.text = authenticationResult.toStringResults()
+            findViewById<TextView?>(R.id.result)?.text = authenticationResult.toStringResults()
         }
     }
 
@@ -218,12 +234,11 @@ class MainActivity : Activity() {
             eci = this.eci,
             xId = this.xId,
             version = this.version,
-            referenceId = this.referenceId
+            referenceId = this.referenceId,
         )
 
     private fun AuthenticationResult.toStringResults(): String {
         when (this.status) {
-
             AuthenticationResponseStatus.UNSUPPORTED_BRAND -> {
                 result = UNSUPPORTED_BRAND_STATUS
                 message = getString(R.string.braspag_message_unsupported_brand)
@@ -256,14 +271,14 @@ class MainActivity : Activity() {
         }
 
         return "Result: $result\n" +
-                "Message: $message\n" +
-                "CAVV: $cavv\n" +
-                "ECI: $eci\n" +
-                "XID: $xId\n" +
-                "Version: $version\n" +
-                "ReferenceId: $referenceId\n" +
-                "Error Code: $errorCode\n" +
-                "Error Message: $errorMessage"
+            "Message: $message\n" +
+            "CAVV: $cavv\n" +
+            "ECI: $eci\n" +
+            "XID: $xId\n" +
+            "Version: $version\n" +
+            "ReferenceId: $referenceId\n" +
+            "Error Code: $errorCode\n" +
+            "Error Message: $errorMessage"
     }
 }
 
@@ -284,5 +299,5 @@ data class AuthenticationResult(
     val referenceId: String? = null,
 
     val errorCode: String? = null,
-    val errorMessage: String? = null
+    val errorMessage: String? = null,
 )

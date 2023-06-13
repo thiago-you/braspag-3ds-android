@@ -12,5 +12,5 @@ data class ShipToData(
     val zipCode: String? = null,
     val country: String? = null,
     val shippingMethod: String? = null,
-    val firstUsageDate: String? = null
+    val firstUsageDate: String? = null,
 )

@@ -8,7 +8,7 @@ class CustomToolbar(
     headerText: String,
     textColor: String,
     textFontName: String,
-    textFontSize: Int
+    textFontSize: Int,
 ) : ToolbarCustomization() {
     init {
         this.backgroundColor = backgroundColor

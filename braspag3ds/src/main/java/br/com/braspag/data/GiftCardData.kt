@@ -1,6 +1,6 @@
 package br.com.braspag.data
 
-data class GiftCardData (
+data class GiftCardData(
     val giftCardAmount: Long? = null,
-    val giftCardCurrency: GiftCardCurrency? = null
+    val giftCardCurrency: GiftCardCurrency? = null,
 )

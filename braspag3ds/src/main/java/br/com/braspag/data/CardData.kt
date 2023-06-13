@@ -5,5 +5,5 @@ data class CardData(
     val expirationMonth: String,
     val expirationYear: String,
     val cardAlias: String? = null,
-    val defaultCard: Boolean? = null
+    val defaultCard: Boolean? = null,
 )

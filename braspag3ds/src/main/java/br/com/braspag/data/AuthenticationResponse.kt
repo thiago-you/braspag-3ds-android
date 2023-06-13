@@ -8,5 +8,5 @@ data class AuthenticationResponse(
     val version: String? = null,
     val referenceId: String? = null,
     val returnCode: String? = null,
-    val returnMessage: String? = null
+    val returnMessage: String? = null,
 )

@@ -1,4 +1,4 @@
-package br.com.braspag.app
+package br.com.braspag.app.sample
 
 import org.junit.Test
 

@@ -5,5 +5,5 @@ data class MddData(
     val mdd2: String? = null,
     val mdd3: String? = null,
     val mdd4: String? = null,
-    val mdd5: String? = null
+    val mdd5: String? = null,
 )

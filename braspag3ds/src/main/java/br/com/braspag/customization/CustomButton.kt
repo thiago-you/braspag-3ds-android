@@ -8,8 +8,8 @@ class CustomButton(
     textFontName: String,
     cornerRadius: Int,
     textFontSize: Int,
-    val type: ButtonType
-) : ButtonCustomization () {
+    val type: ButtonType,
+) : ButtonCustomization() {
     init {
         this.textColor = textColor
         this.backgroundColor = backgroundColor

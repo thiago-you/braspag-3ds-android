@@ -14,5 +14,5 @@ internal fun EnrollData.toRequestValidate(transactionId: String) =
         cardExpirationMonth = this.cardExpirationMonth,
         authNotifyOnly = this.authNotifyOnly,
         authSuppressChallenge = this.authSuppressChallenge,
-        transactionId = transactionId
+        transactionId = transactionId,
     )

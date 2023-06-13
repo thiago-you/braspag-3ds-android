@@ -28,31 +28,34 @@ internal open class CardinalHelper(private val environment: Environment) {
         context: Context,
         jwt: String,
         uiCustomization: UiCustomization,
-        callback: (Boolean, String) -> Unit
+        callback: (Boolean, String) -> Unit,
     ) {
-
         try {
             cardinal = Cardinal.getInstance()
             cardinalConfigure(context, uiCustomization)
 
-            cardinal.init(jwt, object : CardinalInitService {
-                override fun onSetupCompleted(consumerSessionId: String) {
-                    Log.i(TAG, ":::: onSetupCompleted == $consumerSessionId")
-                    callback.invoke(true, consumerSessionId)
-                }
+            cardinal.init(
+                jwt,
+                object : CardinalInitService {
+                    override fun onSetupCompleted(consumerSessionId: String) {
+                        Log.i(TAG, ":::: onSetupCompleted == $consumerSessionId")
+                        callback.invoke(true, consumerSessionId)
+                    }
 
-                override fun onValidated(validateResponse: ValidateResponse, jwt: String?) {
-                    Log.i(TAG, ":::: onValidated == $validateResponse")
-                    callback.invoke(false, validateResponse.errorNumber.toString())
-                }
-            })
-
+                    override fun onValidated(validateResponse: ValidateResponse, jwt: String?) {
+                        Log.i(TAG, ":::: onValidated == $validateResponse")
+                        callback.invoke(false, validateResponse.errorNumber.toString())
+                    }
+                },
+            )
         } catch (e: Throwable) {
             Log.e(TAG, "Error on cardinalInit: $e")
-            if (e.localizedMessage != null)
+
+            if (e.localizedMessage != null) {
                 callback.invoke(false, e.localizedMessage!!)
-            else
+            } else {
                 callback.invoke(false, "Unknown error")
+            }
         }
     }
 
@@ -65,13 +68,15 @@ internal open class CardinalHelper(private val environment: Environment) {
         configParams.challengeTimeout = 5
 
         val renderType = JSONArray()
-        with(renderType, {
+
+        with(renderType) {
             put(CardinalRenderType.OTP)
             put(CardinalRenderType.SINGLE_SELECT)
             put(CardinalRenderType.MULTI_SELECT)
             put(CardinalRenderType.OOB)
             put(CardinalRenderType.HTML)
-        })
+        }
+
         configParams.renderType = renderType
         configParams.uiType = CardinalUiType.BOTH
         configParams.uiCustomization = uiCustomization
@@ -83,7 +88,7 @@ internal open class CardinalHelper(private val environment: Environment) {
         currentActivity: Activity,
         transactionId: String,
         payload: String,
-        callback: (ValidateResponse) -> Unit
+        callback: (ValidateResponse) -> Unit,
     ) {
         cardinal.cca_continue(transactionId, payload, currentActivity) { _, validateResponse, _ ->
             callback.invoke(validateResponse)
