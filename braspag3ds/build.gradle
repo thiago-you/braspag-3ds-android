@@ -18,6 +18,9 @@ android {
         archivesBaseName = "braspag"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField 'String', 'X_SDK_VERSION', "\"3DS-Android@${rootProject.ext.versionName}\""
+        buildConfigField 'String', 'APP_CENTER_KEY', "\"897ccc34-4dc4-4255-b7eb-131d9c62b5a3\""
     }
 
     buildTypes {
@@ -26,12 +29,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-
-    buildTypes.each {
-        it.buildConfigField('String', 'X_SDK_VERSION', "\"3DS-Android@${rootProject.ext.versionName}\"")
-        it.buildConfigField('String', 'APP_CENTER_KEY', "\"897ccc34-4dc4-4255-b7eb-131d9c62b5a3\"")
-    }
-
+    
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -70,9 +68,6 @@ dependencies {
 
     implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
     implementation project(path: ':lib-cardinal', configuration: 'default')
-
-    //SDK Cardinal
-    //implementation 'org.jfrog.cardinalcommerce.gradle:cardinalmobilesdk:2.2.3-2@aar'
 
     //JWT.IO
     implementation 'com.auth0:java-jwt:3.18.1'
