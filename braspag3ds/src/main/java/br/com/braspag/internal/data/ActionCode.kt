@@ -1,6 +1,6 @@
 package br.com.braspag.internal.data
 
-internal enum class ActionCode {
+enum class ActionCode {
     ERROR,
     SUCCESS,
     NO_ACTION,

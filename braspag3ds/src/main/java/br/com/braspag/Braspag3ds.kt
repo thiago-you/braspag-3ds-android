@@ -4,10 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import br.com.braspag.app.BuildConfig
-import br.com.braspag.customization.CustomButton
-import br.com.braspag.customization.CustomLabel
-import br.com.braspag.customization.CustomTextBox
-import br.com.braspag.customization.CustomToolbar
 import br.com.braspag.data.AirlineData
 import br.com.braspag.data.AuthenticationResponse
 import br.com.braspag.data.AuthenticationResponseStatus
@@ -23,7 +19,7 @@ import br.com.braspag.data.OrderData
 import br.com.braspag.data.RecurringData
 import br.com.braspag.data.ShipToData
 import br.com.braspag.data.UserData
-import br.com.braspag.internal.cardinal.CardinalHelper
+import br.com.braspag.internal.cardinal.CardinalReference
 import br.com.braspag.internal.components.BraspagJwt
 import br.com.braspag.internal.data.ActionCode
 import br.com.braspag.internal.data.AuthenticationStatus
@@ -36,12 +32,11 @@ import br.com.braspag.internal.network.BraspagClient
 import br.com.braspag.internal.network.dto.Authentication
 import br.com.braspag.internal.network.dto.RequestOrder
 import br.com.braspag.internal.network.dto.RequestValidate
-import com.cardinalcommerce.shared.userinterfaces.UiCustomization
 import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 
-class Braspag3ds(environment: Environment = Environment.SANDBOX) {
+class Braspag3ds(private val cardinal: CardinalReference, environment: Environment = Environment.SANDBOX) {
 
     companion object {
         private const val TAG = "Braspag3ds"
@@ -50,32 +45,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
     private lateinit var accessToken: String
     private val staging: Environment = environment
     private val braspagClient: BraspagClient = BraspagClient(environment)
-    private val cardinal: CardinalHelper = CardinalHelper(environment)
     private lateinit var callback: (authResponse: AuthenticationResponse) -> Unit
-    private val uiCustomization = UiCustomization()
-
-    fun customize(
-        toolbarCustomization: CustomToolbar? = null,
-        textBoxCustomization: CustomTextBox? = null,
-        labelCustomization: CustomLabel? = null,
-        buttons: List<CustomButton> = listOf(),
-    ) {
-        if (toolbarCustomization != null) {
-            uiCustomization.toolbarCustomization = toolbarCustomization
-        }
-
-        if (textBoxCustomization != null) {
-            uiCustomization.textBoxCustomization = textBoxCustomization
-        }
-
-        if (labelCustomization != null) {
-            uiCustomization.labelCustomization = labelCustomization
-        }
-
-        for (button in buttons) {
-            uiCustomization.setButtonCustomization(button, button.type.value)
-        }
-    }
 
     fun authenticate(
         accessToken: String,
@@ -109,7 +79,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
         // INIT
         configAppCenter(accessToken, staging)
 
-        initCardinal(activity, order, uiCustomization) { isSuccessful, message ->
+        initCardinal(activity, order) { isSuccessful, message ->
             if (isSuccessful) {
                 val enrollData =
                     EnrollData.createInstance(
@@ -284,7 +254,6 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
     private fun initCardinal(
         activity: Context,
         order: RequestOrder,
-        uiCustomization: UiCustomization,
         callback: (isSuccessful: Boolean, message: String) -> Unit,
     ) {
         braspagClient.getJwt(order, accessToken) {
@@ -293,7 +262,6 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                 cardinal.cardinalInit(
                     activity,
                     it.result.token,
-                    uiCustomization,
                 ) { isInitSuccessful, msg ->
                     callback.invoke(isInitSuccessful, msg)
                 }
@@ -389,7 +357,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
         callback: (ActionCode) -> Unit,
     ) {
         cardinal.cardinalCcaContinue(currentActivity, transactionId, payload) {
-            callback.invoke(cardinal.convertToActionCode(it.actionCode))
+            callback.invoke(cardinal.convertToActionCode(it))
         }
     }
 

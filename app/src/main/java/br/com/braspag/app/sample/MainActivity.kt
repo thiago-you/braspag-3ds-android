@@ -4,11 +4,12 @@ import android.app.Activity
 import android.os.Bundle
 import android.widget.TextView
 import br.com.braspag.Braspag3ds
-import br.com.braspag.customization.ButtonType
-import br.com.braspag.customization.CustomButton
-import br.com.braspag.customization.CustomLabel
-import br.com.braspag.customization.CustomTextBox
-import br.com.braspag.customization.CustomToolbar
+import br.com.braspag.app.sample.cardinal.CardinalHelper
+import br.com.braspag.app.sample.cardinal.customization.ButtonType
+import br.com.braspag.app.sample.cardinal.customization.CustomButton
+import br.com.braspag.app.sample.cardinal.customization.CustomLabel
+import br.com.braspag.app.sample.cardinal.customization.CustomTextBox
+import br.com.braspag.app.sample.cardinal.customization.CustomToolbar
 import br.com.braspag.data.AuthenticationMethod
 import br.com.braspag.data.AuthenticationResponse
 import br.com.braspag.data.AuthenticationResponseStatus
@@ -45,9 +46,9 @@ class MainActivity : Activity() {
         setContentView(R.layout.activity_main)
 
         // INSTANTIATE
-        val braspag3ds = Braspag3ds(Environment.SANDBOX)
+        val cardinalHelper = CardinalHelper(Environment.SANDBOX)
 
-        braspag3ds.customize(
+        cardinalHelper.customize(
             toolbarCustomization = CustomToolbar(
                 backgroundColor = "#00c1eb",
                 buttonText = "Cancel",
@@ -115,6 +116,9 @@ class MainActivity : Activity() {
                 ),
             ),
         )
+
+        // INSTANTIATE
+        val braspag3ds = Braspag3ds(cardinalHelper, Environment.SANDBOX)
 
         // Avoiding NetworkOnMainThreadException
         ioScope.launch {

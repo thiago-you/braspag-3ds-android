@@ -53,9 +53,6 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
-
-    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
-    implementation project(path: ':lib-cardinal', configuration: 'default')
     
     //APPCENTER
     def appCenterSdkVersion = '4.3.1'

@@ -1,9 +1,14 @@
-package br.com.braspag.internal.cardinal
+package br.com.braspag.app.sample.cardinal
 
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import br.com.braspag.app.sample.cardinal.customization.CustomButton
+import br.com.braspag.app.sample.cardinal.customization.CustomLabel
+import br.com.braspag.app.sample.cardinal.customization.CustomTextBox
+import br.com.braspag.app.sample.cardinal.customization.CustomToolbar
 import br.com.braspag.data.Environment
+import br.com.braspag.internal.cardinal.CardinalReference
 import br.com.braspag.internal.data.ActionCode
 import com.cardinalcommerce.cardinalmobilesdk.Cardinal
 import com.cardinalcommerce.cardinalmobilesdk.enums.CardinalEnvironment
@@ -16,7 +21,7 @@ import com.cardinalcommerce.cardinalmobilesdk.services.CardinalInitService
 import com.cardinalcommerce.shared.userinterfaces.UiCustomization
 import org.json.JSONArray
 
-internal open class CardinalHelper(private val environment: Environment) {
+class CardinalHelper(private val environment: Environment) : CardinalReference {
 
     companion object {
         const val TAG = "CardinalHelper"
@@ -24,10 +29,34 @@ internal open class CardinalHelper(private val environment: Environment) {
 
     private lateinit var cardinal: Cardinal
 
-    fun cardinalInit(
+    private val uiCustomization = UiCustomization()
+
+    fun customize(
+        toolbarCustomization: CustomToolbar? = null,
+        textBoxCustomization: CustomTextBox? = null,
+        labelCustomization: CustomLabel? = null,
+        buttons: List<CustomButton> = listOf(),
+    ) {
+        if (toolbarCustomization != null) {
+            uiCustomization.toolbarCustomization = toolbarCustomization
+        }
+
+        if (textBoxCustomization != null) {
+            uiCustomization.textBoxCustomization = textBoxCustomization
+        }
+
+        if (labelCustomization != null) {
+            uiCustomization.labelCustomization = labelCustomization
+        }
+
+        for (button in buttons) {
+            uiCustomization.setButtonCustomization(button, button.type.value)
+        }
+    }
+
+    override fun cardinalInit(
         context: Context,
         jwt: String,
-        uiCustomization: UiCustomization,
         callback: (Boolean, String) -> Unit,
     ) {
         try {
@@ -84,19 +113,19 @@ internal open class CardinalHelper(private val environment: Environment) {
         cardinal.configure(context, configParams)
     }
 
-    fun cardinalCcaContinue(
+    override fun cardinalCcaContinue(
         currentActivity: Activity,
         transactionId: String,
         payload: String,
-        callback: (ValidateResponse) -> Unit,
+        callback: (Any) -> Unit,
     ) {
         cardinal.cca_continue(transactionId, payload, currentActivity) { _, validateResponse, _ ->
             callback.invoke(validateResponse)
         }
     }
 
-    fun convertToActionCode(cardinalActionCode: CardinalActionCode): ActionCode {
-        return when (cardinalActionCode) {
+    override fun convertToActionCode(cardinalActionCode: Any): ActionCode {
+        return when (cardinalActionCode as CardinalActionCode) {
             CardinalActionCode.ERROR -> ActionCode.ERROR
             CardinalActionCode.SUCCESS -> ActionCode.SUCCESS
             CardinalActionCode.CANCEL -> ActionCode.CANCEL
@@ -106,5 +135,5 @@ internal open class CardinalHelper(private val environment: Environment) {
         }
     }
 
-    fun cardinalCleanupInstance() = Cardinal.getInstance().cleanup()
+    override fun cardinalCleanupInstance() = Cardinal.getInstance().cleanup()
 }

@@ -1,4 +1,4 @@
-package br.com.braspag.customization
+package br.com.braspag.app.sample.cardinal.customization
 
 import com.cardinalcommerce.shared.userinterfaces.LabelCustomization
 
