@@ -40,18 +40,6 @@ android {
     }
 }
 
-//Properties properties = new Properties()
-//if (project.rootProject.file('local.properties').canRead()) {
-//    properties.load(project.rootProject.file("local.properties").newDataInputStream())
-//    ext.cardinal_url = properties.getProperty('CARDINAL_URL')
-//    ext.cardinal_user = properties.getProperty('CARDINAL_USER')
-//    ext.cardinal_key = properties.getProperty('CARDINAL_KEY')
-//} else {
-//    ext.cardinal_url = System.getenv('CARDINAL_URL')
-//    ext.cardinal_user = System.getenv('CARDINAL_USER')
-//    ext.cardinal_key = System.getenv('CARDINAL_KEY')
-//}
-
 fataar {
     transitive = true
 }
@@ -66,8 +54,8 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
-//    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
-//    implementation project(path: ':lib-cardinal', configuration: 'default')
+    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
+    implementation project(path: ':lib-cardinal', configuration: 'default')
     
     //APPCENTER
     def appCenterSdkVersion = '4.3.1'
