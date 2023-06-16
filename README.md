@@ -55,6 +55,13 @@ dependencies {
 ### Jetifier
 A configuração do `Jetifier` foi ativada para poder utilizar a versão atual da biblioteca `Cardinal`. Essa configuração força a compatibilidade com as bibliotecas legadas de `support` do Android.
 
+### Jitpack
+Para gerar uma versão válida do Jitpack.io é necessário também gerar uma versão equivalente da seguinte biblioteca:
+
+https://github.com/thiago-you/lib-cardinal
+
+Essa biblioteca é usada como referência para ser substituída pelo módulo local no compilador do Jitpack e do Gradle.
+
 ### Documentação
 
 Link para a documentação do SDK Android para o 3ds: https://braspag.github.io//manual/integracao-sdk-android
