@@ -45,6 +45,10 @@ fataar {
 }
 
 dependencies {
+    // cardinal lib aar import
+    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
+    implementation project(path: ':lib-cardinal', configuration: 'default')
+
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.0'
 
@@ -54,9 +58,6 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
-    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
-    implementation project(path: ':lib-cardinal', configuration: 'default')
-    
     //APPCENTER
     def appCenterSdkVersion = '4.3.1'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"

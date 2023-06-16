@@ -6,7 +6,6 @@ Com o objetivo de minimizar o índice de fraude sem prejudicar a taxa de convers
 
 ## Últimas Alterações
 - Migração do repositório JCenter (descontinuado) para o Jitpack.io
-- Migração das dependências de Support (Jetifier) para Androidx
 - Atualização SDK suportado e compilado para a API 33
 - Atualização das depêndencias do Gradle
 - Removido plugins depreciados (kotlin synthetics)
@@ -29,6 +28,27 @@ Depois, adicione a implementação da dependência no `build.gradle` do seu mód
 ```gradle
 dependencies {
     implementation 'com.github.thiago-you:braspag-3ds-android:1.0.0'
+}
+```
+
+Para utilizar o módulo Cardinal, também é necessário realizar o download da biblioteca `.aar` e realizar a importação como módulo dentro do projeto.
+
+A importação pode ser realizada adicionando os memos arquivos que estão importados neste projeto, no módulo: `lib-cardinal`
+
+**Link:** https://github.com/thiago-you/braspag-3ds-android/tree/master/lib-cardinal
+
+É necessário adicionar os 2 arquivos dentro do módulo no seu projeto:
+
+- build.gradle
+- cardinalmobilesdk-2.2.5-4.aar
+
+Após isso, basta adicionar a implementação dentro do `Gradle` da sua aplicação:
+
+```gradle
+dependencies {
+    // cardinal lib aar import
+    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
+    implementation project(path: ':lib-cardinal', configuration: 'default')
 }
 ```
 
