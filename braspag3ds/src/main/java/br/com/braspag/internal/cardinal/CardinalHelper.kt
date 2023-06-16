@@ -20,6 +20,9 @@ internal open class CardinalHelper(private val environment: Environment) {
 
     companion object {
         const val TAG = "CardinalHelper"
+
+        private const val REQUEST_TIMEOUT = 8000
+        private const val CHALLENGE_TIMEOUT = 5
     }
 
     private lateinit var cardinal: Cardinal
@@ -50,26 +53,23 @@ internal open class CardinalHelper(private val environment: Environment) {
             )
         } catch (e: Throwable) {
             Log.e(TAG, "Error on cardinalInit: $e")
-
-            if (e.localizedMessage != null) {
-                callback.invoke(false, e.localizedMessage!!)
-            } else {
-                callback.invoke(false, "Unknown error")
-            }
+            callback.invoke(false, e.localizedMessage ?: "Unknown error")
         }
     }
 
     private fun cardinalConfigure(context: Context, uiCustomization: UiCustomization) {
         val configParams = CardinalConfigurationParameters()
 
-        configParams.environment =
-            if (environment == Environment.SANDBOX) CardinalEnvironment.STAGING else CardinalEnvironment.PRODUCTION
-        configParams.requestTimeout = 8000
-        configParams.challengeTimeout = 5
+        configParams.environment = if (environment == Environment.SANDBOX) {
+            CardinalEnvironment.STAGING
+        } else {
+            CardinalEnvironment.PRODUCTION
+        }
 
-        val renderType = JSONArray()
+        configParams.requestTimeout = REQUEST_TIMEOUT
+        configParams.challengeTimeout = CHALLENGE_TIMEOUT
 
-        with(renderType) {
+        val renderType = JSONArray().apply {
             put(CardinalRenderType.OTP)
             put(CardinalRenderType.SINGLE_SELECT)
             put(CardinalRenderType.MULTI_SELECT)

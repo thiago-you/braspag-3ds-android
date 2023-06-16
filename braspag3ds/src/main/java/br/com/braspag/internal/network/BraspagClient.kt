@@ -34,49 +34,28 @@ internal class BraspagClient(environment: Environment = Environment.SANDBOX) {
 
         call.enqueue(object : Callback<ResponseJWT> {
             override fun onFailure(call: Call<ResponseJWT>, t: Throwable) {
-                t.localizedMessage?.let {
-                    callback.invoke(
-                        ClientResult(
-                            null,
-                            HttpStatusCode.Unknown,
-                            t.localizedMessage,
-                        ),
-                    )
-                }
+                callback(resultFailure(t))
             }
 
             override fun onResponse(call: Call<ResponseJWT>, response: Response<ResponseJWT>) {
-                if (response.isSuccessful) {
-                    if (response.body() != null) {
-                        callback(
-                            ClientResult(
-                                response.body(),
-                                response.code().toStatusCode(),
-                            ),
-                        )
-                    } else {
-                        callback.invoke(
-                            ClientResult(
-                                null,
-                                response.code().toStatusCode(),
-                                "The response object is null for getJwt. Error ${response.code()} - ${response.code().toStatusCode()}",
-                            ),
-                        )
-                    }
+                if (!response.isSuccessful) {
+                    return callback(resultError(response))
+                }
+
+                if (response.body() != null) {
+                    callback(resultSuccess(response))
                 } else {
-                    callback.invoke(
-                        ClientResult(
-                            null,
-                            response.code().toStatusCode(),
-                            "Error ${response.code()} - ${response.code().toStatusCode()}",
-                        ),
-                    )
+                    val message = "The response object is null for getJwt. Error %s - %s".let {
+                        String.format(it, response.code(), response.code().toStatusCode())
+                    }
+
+                    callback(resultInvalid(response, message))
                 }
             }
         })
     }
 
-    fun enroll(
+    fun enrollData(
         enrollData: EnrollData,
         oauthToken: String,
         callback: (model: ClientResult<ResponseEnroll>) -> Unit,
@@ -86,46 +65,18 @@ internal class BraspagClient(environment: Environment = Environment.SANDBOX) {
 
         call.enqueue(object : Callback<ResponseEnroll> {
             override fun onFailure(call: Call<ResponseEnroll>, t: Throwable) {
-                t.localizedMessage?.let {
-                    callback.invoke(
-                        ClientResult(
-                            null,
-                            HttpStatusCode.Unknown,
-                            t.localizedMessage,
-                        ),
-                    )
-                }
+                callback.invoke(resultFailure(t))
             }
 
-            override fun onResponse(
-                call: Call<ResponseEnroll>,
-                response: Response<ResponseEnroll>,
-            ) {
-                if (response.isSuccessful) {
-                    if (response.body() != null) {
-                        callback(
-                            ClientResult(
-                                response.body(),
-                                response.code().toStatusCode(),
-                            ),
-                        )
-                    } else {
-                        callback.invoke(
-                            ClientResult(
-                                null,
-                                response.code().toStatusCode(),
-                                "The response object is null for enroll.",
-                            ),
-                        )
-                    }
+            override fun onResponse(call: Call<ResponseEnroll>, response: Response<ResponseEnroll>) {
+                if (!response.isSuccessful) {
+                    return callback(resultError(response))
+                }
+
+                if (response.body() != null) {
+                    callback(resultSuccess(response))
                 } else {
-                    callback.invoke(
-                        ClientResult(
-                            null,
-                            response.code().toStatusCode(),
-                            "Error ${response.code()} - ${response.code().toStatusCode()}",
-                        ),
-                    )
+                    callback(resultInvalid(response, "The response object is null for enroll."))
                 }
             }
         })
@@ -140,46 +91,18 @@ internal class BraspagClient(environment: Environment = Environment.SANDBOX) {
 
         call.enqueue(object : Callback<Authentication> {
             override fun onFailure(call: Call<Authentication>, t: Throwable) {
-                t.localizedMessage?.let {
-                    callback.invoke(
-                        ClientResult(
-                            null,
-                            HttpStatusCode.Unknown,
-                            t.localizedMessage,
-                        ),
-                    )
-                }
+                callback.invoke(resultFailure(t))
             }
 
-            override fun onResponse(
-                call: Call<Authentication>,
-                response: Response<Authentication>,
-            ) {
-                if (response.isSuccessful) {
-                    if (response.body() != null) {
-                        callback(
-                            ClientResult(
-                                response.body(),
-                                response.code().toStatusCode(),
-                            ),
-                        )
-                    } else {
-                        callback.invoke(
-                            ClientResult(
-                                null,
-                                response.code().toStatusCode(),
-                                "The response object is null for validate.",
-                            ),
-                        )
-                    }
+            override fun onResponse(call: Call<Authentication>, response: Response<Authentication>) {
+                if (!response.isSuccessful) {
+                    return callback(resultError(response))
+                }
+
+                if (response.body() != null) {
+                    callback(resultSuccess(response))
                 } else {
-                    callback.invoke(
-                        ClientResult(
-                            null,
-                            response.code().toStatusCode(),
-                            "Error ${response.code()} - ${response.code().toStatusCode()}",
-                        ),
-                    )
+                    callback(resultInvalid(response, "The response object is null for validate."))
                 }
             }
         })
@@ -191,5 +114,29 @@ internal class BraspagClient(environment: Environment = Environment.SANDBOX) {
         } else {
             PRODUCTION_URL
         }
+    }
+
+    private fun <T> resultSuccess(response: Response<T>): ClientResult<T> {
+        return ClientResult(response.body(), response.code().toStatusCode())
+    }
+
+    private fun <T> resultInvalid(response: Response<T>, message: String): ClientResult<T> {
+        return ClientResult(null, response.code().toStatusCode(), message)
+    }
+
+    private fun <T> resultError(response: Response<T>): ClientResult<T> {
+        return ClientResult(
+            null,
+            response.code().toStatusCode(),
+            "Error ${response.code()} - ${response.code().toStatusCode()}",
+        )
+    }
+
+    private fun <T> resultFailure(throwable: Throwable): ClientResult<T> {
+        return ClientResult(
+            null,
+            HttpStatusCode.Unknown,
+            throwable.localizedMessage ?: "Unknown Error",
+        )
     }
 }

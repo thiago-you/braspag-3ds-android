@@ -41,18 +41,18 @@ import com.microsoft.appcenter.AppCenter
 import com.microsoft.appcenter.analytics.Analytics
 import com.microsoft.appcenter.crashes.Crashes
 
-class Braspag3ds(environment: Environment = Environment.SANDBOX) {
+class Braspag3ds(private val environment: Environment = Environment.SANDBOX) {
 
     companion object {
         private const val TAG = "Braspag3ds"
     }
 
     private lateinit var accessToken: String
-    private val staging: Environment = environment
-    private val braspagClient: BraspagClient = BraspagClient(environment)
-    private val cardinal: CardinalHelper = CardinalHelper(environment)
     private lateinit var callback: (authResponse: AuthenticationResponse) -> Unit
+
     private val uiCustomization = UiCustomization()
+    private val cardinal: CardinalHelper = CardinalHelper(environment)
+    private val braspagClient: BraspagClient = BraspagClient(environment)
 
     fun customize(
         toolbarCustomization: CustomToolbar? = null,
@@ -63,11 +63,9 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
         if (toolbarCustomization != null) {
             uiCustomization.toolbarCustomization = toolbarCustomization
         }
-
         if (textBoxCustomization != null) {
             uiCustomization.textBoxCustomization = textBoxCustomization
         }
-
         if (labelCustomization != null) {
             uiCustomization.labelCustomization = labelCustomization
         }
@@ -100,183 +98,113 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
         val order = orderData.toRequestOrder()
 
-        AppCenter.start(
-            activity.application,
-            BuildConfig.APP_CENTER_KEY,
-            Analytics::class.java,
-            Crashes::class.java,
-        )
-        // INIT
-        configAppCenter(accessToken, staging)
+        setupAppCenterTrack(activity, accessToken, environment)
 
         initCardinal(activity, order, uiCustomization) { isSuccessful, message ->
-            if (isSuccessful) {
-                val enrollData =
-                    EnrollData.createInstance(
-                        orderData,
-                        cardData,
-                        giftCard,
-                        authOptions,
-                        billToData,
-                        shipToData,
-                        cart,
-                        deviceData,
-                        userData,
-                        airlineData,
-                        mddData,
-                        recurringData,
-                        ipAddress,
-                    )
-
-                // ENROLL
-                enroll(enrollData, accessToken) { enrollResult ->
-                    when (enrollResult.status) {
-                        EnrollStatus.ENROLLED -> {
-                            Log.i(TAG, "ENROLLED: $message, paReq: ${enrollResult.paReq}")
-
-                            if (enrollData.authSuppressChallenge == true) {
-                                callback.invoke(
-                                    AuthenticationResponse(
-                                        status = AuthenticationResponseStatus.CHALLENGE_SUPPRESSION,
-                                        returnCode = "MPI601",
-                                        returnMessage = "Challenge suppressed",
-                                    ),
-                                )
-                            } else {
-                                if (enrollResult.transactionId == null) {
-                                    callback.invoke(
-                                        AuthenticationResponse(
-                                            status = AuthenticationResponseStatus.ERROR,
-                                            returnCode = "MSI667",
-                                            returnMessage = "transactionId is null",
-                                        ),
-                                    )
-                                } else {
-                                    // CCACONTINUE
-                                    ccaContinue(
-                                        activity,
-                                        enrollResult.transactionId,
-                                        enrollResult.paReq!!,
-                                    ) {
-                                        Log.i(TAG, ":::::::::::::: ccaContinue return: $it")
-
-                                        when (it) {
-                                            ActionCode.SUCCESS,
-                                            ActionCode.NO_ACTION,
-                                            ActionCode.FAILURE,
-                                            ActionCode.ERROR,
-                                            -> {
-                                                // VALIDATE
-
-                                                validate(
-                                                    enrollData.toRequestValidate(enrollResult.transactionId),
-                                                    validateCallback,
-                                                )
-                                            }
-                                            else -> {
-                                                callback.invoke(
-                                                    AuthenticationResponse(
-                                                        status = AuthenticationResponseStatus.ERROR,
-                                                        returnCode = "MPI902",
-                                                        returnMessage = "Unexpected authentication response",
-                                                    ),
-                                                )
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        EnrollStatus.VALIDATION_NEEDED -> {
-                            if (enrollResult.transactionId == null) {
-                                callback.invoke(
-                                    AuthenticationResponse(
-                                        status = AuthenticationResponseStatus.ERROR,
-                                        returnCode = "MSI667",
-                                        returnMessage = "transactionId is null",
-                                    ),
-                                )
-                            } else {
-                                // VALIDATE
-                                validate(
-                                    enrollData.toRequestValidate(enrollResult.transactionId),
-                                    validateCallback,
-                                )
-                            }
-                        }
-
-                        EnrollStatus.AUTHENTICATION_CHECK_NEEDED -> {
-                            if (enrollResult.authentication == null) {
-                                callback.invoke(
-                                    AuthenticationResponse(
-                                        status = AuthenticationResponseStatus.ERROR,
-                                        returnCode = "MSI668",
-                                        returnMessage = "authentication is null",
-                                    ),
-                                )
-                            } else {
-                                checkAuthentication(enrollResult.authentication, callback)
-                            }
-                        }
-
-                        EnrollStatus.NOT_ENROLLED -> {
-                            callback.invoke(
-                                AuthenticationResponse(
-                                    status = AuthenticationResponseStatus.UNENROLLED,
-                                    xId = enrollResult.xid,
-                                    eci = enrollResult.eci,
-                                    version = enrollResult.version,
-                                    referenceId = enrollResult.referenceId,
-                                    returnCode = enrollResult.authentication?.returnCode,
-                                    returnMessage = enrollResult.authentication?.returnMessage,
-                                ),
-                            )
-                        }
-
-                        EnrollStatus.FAILED -> {
-                            callback.invoke(
-                                AuthenticationResponse(
-                                    status = AuthenticationResponseStatus.FAILURE,
-                                    xId = enrollResult.xid,
-                                    eci = enrollResult.eci,
-                                    version = enrollResult.version,
-                                    referenceId = enrollResult.referenceId,
-                                    returnCode = enrollResult.authentication?.returnCode,
-                                    returnMessage = enrollResult.authentication?.returnMessage,
-                                ),
-                            )
-                        }
-
-                        EnrollStatus.UNSUPPORTED_BRAND -> {
-                            callback.invoke(
-                                AuthenticationResponse(
-                                    status = AuthenticationResponseStatus.UNSUPPORTED_BRAND,
-                                    returnCode = enrollResult.authentication?.returnCode,
-                                    returnMessage = enrollResult.authentication?.returnMessage,
-                                ),
-                            )
-                        }
-
-                        else -> {
-                            callback.invoke(
-                                AuthenticationResponse(
-                                    status = AuthenticationResponseStatus.ERROR,
-                                    returnCode = "MPI906",
-                                    returnMessage = "An error has occurred during enroll",
-                                ),
-                            )
-                        }
-                    }
-                }
-            } else {
-                callback.invoke(
+            if (!isSuccessful) {
+                return@initCardinal callback(
                     AuthenticationResponse(
                         status = AuthenticationResponseStatus.ERROR,
                         returnCode = "MPI906",
                         returnMessage = "An error has occurred during init",
                     ),
                 )
+            }
+
+            val enrollData = EnrollData.createInstance(
+                orderData,
+                cardData,
+                giftCard,
+                authOptions,
+                billToData,
+                shipToData,
+                cart,
+                deviceData,
+                userData,
+                airlineData,
+                mddData,
+                recurringData,
+                ipAddress,
+            )
+
+            // ENROLL
+            enroll(enrollData, accessToken) { enrollResult ->
+                when (enrollResult.status) {
+                    EnrollStatus.ENROLLED -> {
+                        Log.i(TAG, "ENROLLED: $message, paReq: ${enrollResult.paReq}")
+                        enrollSuccess(activity, enrollData, enrollResult)
+                    }
+                    EnrollStatus.VALIDATION_NEEDED -> {
+                        if (enrollResult.transactionId == null) {
+                            callback(
+                                AuthenticationResponse(
+                                    status = AuthenticationResponseStatus.ERROR,
+                                    returnCode = "MSI667",
+                                    returnMessage = "transactionId is null",
+                                ),
+                            )
+                        } else {
+                            validate(enrollData.toRequestValidate(enrollResult.transactionId), validateCallback)
+                        }
+                    }
+                    EnrollStatus.AUTHENTICATION_CHECK_NEEDED -> {
+                        if (enrollResult.authentication == null) {
+                            callback(
+                                AuthenticationResponse(
+                                    status = AuthenticationResponseStatus.ERROR,
+                                    returnCode = "MSI668",
+                                    returnMessage = "authentication is null",
+                                ),
+                            )
+                        } else {
+                            checkAuthentication(enrollResult.authentication, callback)
+                        }
+                    }
+                    EnrollStatus.NOT_ENROLLED -> {
+                        callback(
+                            AuthenticationResponse(
+                                status = AuthenticationResponseStatus.UNENROLLED,
+                                xId = enrollResult.xid,
+                                eci = enrollResult.eci,
+                                version = enrollResult.version,
+                                referenceId = enrollResult.referenceId,
+                                returnCode = enrollResult.authentication?.returnCode,
+                                returnMessage = enrollResult.authentication?.returnMessage,
+                            ),
+                        )
+                    }
+                    EnrollStatus.FAILED -> {
+                        callback(
+                            AuthenticationResponse(
+                                status = AuthenticationResponseStatus.FAILURE,
+                                xId = enrollResult.xid,
+                                eci = enrollResult.eci,
+                                version = enrollResult.version,
+                                referenceId = enrollResult.referenceId,
+                                returnCode = enrollResult.authentication?.returnCode,
+                                returnMessage = enrollResult.authentication?.returnMessage,
+                            ),
+                        )
+                    }
+                    EnrollStatus.UNSUPPORTED_BRAND -> {
+                        callback(
+                            AuthenticationResponse(
+                                status = AuthenticationResponseStatus.UNSUPPORTED_BRAND,
+                                returnCode = enrollResult.authentication?.returnCode,
+                                returnMessage = enrollResult.authentication?.returnMessage,
+                            ),
+                        )
+                    }
+                    else -> {
+                        callback(
+                            AuthenticationResponse(
+                                status = AuthenticationResponseStatus.ERROR,
+                                returnCode = "MPI906",
+                                returnMessage = "An error has occurred during enroll",
+                            ),
+                        )
+                    }
+                }
             }
         }
     }
@@ -289,16 +217,15 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
     ) {
         braspagClient.getJwt(order, accessToken) {
             Log.i(TAG, ":::: getJwt response $it")
-            if (it.result?.token != null) {
-                cardinal.cardinalInit(
-                    activity,
-                    it.result.token,
-                    uiCustomization,
-                ) { isInitSuccessful, msg ->
-                    callback.invoke(isInitSuccessful, msg)
+
+            val token = it.result?.token ?: String()
+
+            if (token.isNotBlank()) {
+                cardinal.cardinalInit(activity, token, uiCustomization) { isInitSuccessful, msg ->
+                    callback(isInitSuccessful, msg)
                 }
             } else {
-                callback.invoke(false, it.errorMessage.toString())
+                callback(false, it.errorMessage.toString())
             }
         }
     }
@@ -308,8 +235,17 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
         oauthToken: String,
         callback: (enrollResult: EnrollResult) -> Unit,
     ) {
-        braspagClient.enroll(request, oauthToken) { clientResult ->
-            clientResult.result?.let { response ->
+        braspagClient.enrollData(request, oauthToken) { clientResult ->
+            if (clientResult.result == null) {
+                return@enrollData callback(
+                    EnrollResult(
+                        status = EnrollStatus.NOT_ENROLLED,
+                        message = clientResult.errorMessage ?: "Not enrolled",
+                    ),
+                )
+            }
+
+            clientResult.result.also { response ->
                 var eci = response.authentication.eci
 
                 val status = response.status
@@ -334,15 +270,17 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                     }
                     EnrollStatus.FAILED.name -> {
                         enrollStatus = EnrollStatus.FAILED
-                        if (eci == null) eci = response.authentication.eciRaw
+
+                        if (eci == null) {
+                            eci = response.authentication.eciRaw
+                        }
                     }
                     else -> {
-                        // error
                         enrollStatus = EnrollStatus.ERROR
                     }
                 }
 
-                callback.invoke(
+                callback(
                     EnrollResult(
                         enrollStatus,
                         response.authentication,
@@ -356,12 +294,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                         response.authentication.transactionId,
                     ),
                 )
-            } ?: callback.invoke(
-                EnrollResult(
-                    status = EnrollStatus.NOT_ENROLLED,
-                    message = clientResult.errorMessage ?: "Not enrolled",
-                ),
-            )
+            }
         }
     }
 
@@ -371,13 +304,59 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
     ) {
         braspagClient.validate(request, accessToken) {
             if (it.result?.status != null) {
-                callback.invoke(true, it.result)
+                callback(true, it.result)
             } else {
                 val errorResponse = Authentication(
                     returnCode = "MPI900",
                     returnMessage = "An error has occurred (${it.statusCode.code})",
                 )
-                callback.invoke(false, errorResponse)
+
+                callback(false, errorResponse)
+            }
+        }
+    }
+
+    private fun enrollSuccess(activity: Activity, enrollData: EnrollData, enrollResult: EnrollResult) {
+        if (enrollData.authSuppressChallenge == true) {
+            return callback(
+                AuthenticationResponse(
+                    status = AuthenticationResponseStatus.CHALLENGE_SUPPRESSION,
+                    returnCode = "MPI601",
+                    returnMessage = "Challenge suppressed",
+                ),
+            )
+        }
+        if (enrollResult.transactionId == null) {
+            return callback(
+                AuthenticationResponse(
+                    status = AuthenticationResponseStatus.ERROR,
+                    returnCode = "MSI667",
+                    returnMessage = "transactionId is null",
+                ),
+            )
+        }
+
+        // CCACONTINUE
+        ccaContinue(activity, enrollResult.transactionId, enrollResult.paReq ?: String()) {
+            Log.i(TAG, ":::::::::::::: ccaContinue return: $it")
+
+            when (it) {
+                ActionCode.SUCCESS,
+                ActionCode.NO_ACTION,
+                ActionCode.FAILURE,
+                ActionCode.ERROR,
+                -> {
+                    validate(enrollData.toRequestValidate(enrollResult.transactionId), validateCallback)
+                }
+                else -> {
+                    callback(
+                        AuthenticationResponse(
+                            status = AuthenticationResponseStatus.ERROR,
+                            returnCode = "MPI902",
+                            returnMessage = "Unexpected authentication response",
+                        ),
+                    )
+                }
             }
         }
     }
@@ -389,7 +368,7 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
         callback: (ActionCode) -> Unit,
     ) {
         cardinal.cardinalCcaContinue(currentActivity, transactionId, payload) {
-            callback.invoke(cardinal.convertToActionCode(it.actionCode))
+            callback(cardinal.convertToActionCode(it.actionCode))
         }
     }
 
@@ -401,99 +380,53 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
 
         when (authentication.status) {
             AuthenticationStatus.AUTHENTICATED.name -> {
-                callback.invoke(
-                    AuthenticationResponse(
-                        AuthenticationResponseStatus.SUCCESS,
-                        authentication.cavv,
-                        authentication.xId,
-                        authentication.eci,
-                        authentication.version,
-                        authentication.transactionId,
-                        authentication.returnCode,
-                        authentication.returnMessage,
-                    ),
-                )
+                callback(authentication.toResponse(AuthenticationResponseStatus.SUCCESS))
             }
-
             AuthenticationStatus.UNAVAILABLE.name -> {
-                callback.invoke(
-                    AuthenticationResponse(
-                        status = AuthenticationResponseStatus.UNENROLLED,
-                        xId = authentication.xId,
-                        eci = authentication.eci,
-                        version = authentication.version,
-                        referenceId = authentication.transactionId,
-                        returnCode = authentication.returnCode,
-                        returnMessage = authentication.returnMessage,
-                    ),
-                )
+                callback(authentication.toResponse(AuthenticationResponseStatus.UNENROLLED))
             }
-
             AuthenticationStatus.FAILED.name -> {
-                callback.invoke(
-                    AuthenticationResponse(
-                        AuthenticationResponseStatus.FAILURE,
-                        xId = authentication.xId,
-                        eci = authentication.eci ?: authentication.eciRaw,
-                        version = authentication.version,
-                        referenceId = authentication.transactionId,
-                        returnCode = authentication.returnCode,
-                        returnMessage = authentication.returnMessage,
-                    ),
-                )
+                callback(authentication.toResponse(AuthenticationResponseStatus.FAILURE))
             }
-
             AuthenticationStatus.ERROR_OCCURRED.name -> {
-                callback.invoke(
-                    AuthenticationResponse(
-                        status = AuthenticationResponseStatus.ERROR,
-                        xId = authentication.xId,
-                        eci = authentication.eci ?: authentication.eciRaw,
-                        returnCode = authentication.returnCode,
-                        returnMessage = authentication.returnMessage,
-                        referenceId = authentication.transactionId,
-                    ),
-                )
+                callback(authentication.toResponse(AuthenticationResponseStatus.ERROR))
             }
-
             else -> {
-                callback.invoke(
-                    AuthenticationResponse(
-                        status = AuthenticationResponseStatus.ERROR,
-                        xId = authentication.xId,
-                        eci = authentication.eci ?: authentication.eciRaw,
-                        returnCode = authentication.returnCode,
-                        returnMessage = authentication.returnMessage,
-                        referenceId = authentication.transactionId,
-                    ),
-                )
+                callback(authentication.toResponse(AuthenticationResponseStatus.ERROR))
             }
         }
     }
 
-    private val validateCallback: (isSuccessful: Boolean, data: Authentication?) -> Unit =
-        { isSuccessful, data ->
+    private val validateCallback: (isSuccessful: Boolean, data: Authentication?) -> Unit = { isSuccessful, data ->
+        Log.i(TAG, "------ validateCallback - $isSuccessful - return: $data")
 
-            Log.i(TAG, "------ validateCallback - $isSuccessful - return: $data")
-
-            try {
-                if (data != null) {
-                    checkAuthentication(data, callback)
-                } else {
-                    callback.invoke(
-                        AuthenticationResponse(
-                            status = AuthenticationResponseStatus.ERROR,
-                            returnCode = "MSI666",
-                            returnMessage = "authentication is null",
-                        ),
-                    )
-                }
-            } catch (t: Throwable) {
-                Log.e(TAG, "::::: ERROR on validateCallback - $t")
+        try {
+            if (data != null) {
+                checkAuthentication(data, callback)
+            } else {
+                callback.invoke(
+                    AuthenticationResponse(
+                        status = AuthenticationResponseStatus.ERROR,
+                        returnCode = "MSI666",
+                        returnMessage = "authentication is null",
+                    ),
+                )
             }
-            cardinal.cardinalCleanupInstance()
+        } catch (t: Throwable) {
+            Log.e(TAG, "::::: ERROR on validateCallback - $t")
         }
-    private fun configAppCenter(JWTEncoded: String, environment: Environment) {
+
+        cardinal.cardinalCleanupInstance()
+    }
+
+    private fun setupAppCenterTrack(activity: Activity, JWTEncoded: String, environment: Environment) {
+        AppCenter.start(
+            activity.application,
+            BuildConfig.APP_CENTER_KEY,
+            Analytics::class.java,
+            Crashes::class.java,
+        )
+
         val jwt = BraspagJwt(JWTEncoded)
 
         val properties = HashMap<String, String>().apply {
@@ -509,5 +442,18 @@ class Braspag3ds(environment: Environment = Environment.SANDBOX) {
                 Analytics.trackEvent("PRODUCTION", properties)
             }
         }
+    }
+
+    private fun Authentication.toResponse(status: AuthenticationResponseStatus): AuthenticationResponse {
+        return AuthenticationResponse(
+            status,
+            cavv = this.cavv.takeIf { status == AuthenticationResponseStatus.SUCCESS },
+            xId = this.xId,
+            eci = this.eci ?: this.eciRaw,
+            version = this.version,
+            referenceId = this.transactionId.takeIf { status != AuthenticationResponseStatus.ERROR },
+            returnCode = this.returnCode,
+            returnMessage = this.returnMessage,
+        )
     }
 }
