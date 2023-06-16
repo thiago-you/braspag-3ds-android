@@ -52,6 +52,9 @@ dependencies {
 }
 ```
 
+### Jetifier
+A configuração do `Jetifier` foi ativada para poder utilizar a versão atual da biblioteca `Cardinal`. Essa configuração força a compatibilidade com as bibliotecas legadas de `support` do Android.
+
 ### Documentação
 
 Link para a documentação do SDK Android para o 3ds: https://braspag.github.io//manual/integracao-sdk-android
