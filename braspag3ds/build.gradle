@@ -43,6 +43,9 @@ android {
 }
 
 dependencies {
+    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
+    implementation project(path: ':lib-cardinal', configuration: 'default')
+    
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
 
@@ -50,17 +53,18 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
-    implementation 'org.conscrypt:conscrypt-android:2.2.1'
-
-    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
-    implementation project(path: ':lib-cardinal', configuration: 'default')
+    implementation 'org.conscrypt:conscrypt-android:2.5.2'
     
-    //App Center
-    def appCenterSdkVersion = '4.3.1'
+    // App Center
+    def appCenterSdkVersion = '5.0.2'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    
+    // Espresso Core without support libraries
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    }
 }

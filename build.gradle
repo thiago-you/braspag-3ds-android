@@ -23,11 +23,6 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-
-        maven {
-            setUrl("https://jitpack.io")
-            content { includeGroup("com.github.aasitnikov") }
-        }
     }
 }
 
