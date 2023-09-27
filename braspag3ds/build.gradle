@@ -2,14 +2,12 @@ plugins {
     id 'com.android.library'
     id 'kotlin-android'
     id 'kotlin-parcelize'
-    id 'com.kezong.fat-aar'
 }
 
 android {
     namespace "br.com.braspag.app"
 
-    compileSdkVersion rootProject.ext.sdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdk rootProject.ext.sdkVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -30,46 +28,34 @@ android {
         }
     }
 
+    buildFeatures {
+        buildConfig = true
+    }
+    
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_11
-        targetCompatibility JavaVersion.VERSION_11
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 }
 
-//Properties properties = new Properties()
-//if (project.rootProject.file('local.properties').canRead()) {
-//    properties.load(project.rootProject.file("local.properties").newDataInputStream())
-//    ext.cardinal_url = properties.getProperty('CARDINAL_URL')
-//    ext.cardinal_user = properties.getProperty('CARDINAL_USER')
-//    ext.cardinal_key = properties.getProperty('CARDINAL_KEY')
-//} else {
-//    ext.cardinal_url = System.getenv('CARDINAL_URL')
-//    ext.cardinal_user = System.getenv('CARDINAL_USER')
-//    ext.cardinal_key = System.getenv('CARDINAL_KEY')
-//}
-
-fataar {
-    transitive = true
-}
-
 dependencies {
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.6.0'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.6.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
     implementation 'org.conscrypt:conscrypt-android:2.2.1'
 
-//    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
-//    implementation project(path: ':lib-cardinal', configuration: 'default')
+    implementation fileTree(include: ['*.aar', '*jar'], dir: 'libs')
+    implementation project(path: ':lib-cardinal', configuration: 'default')
     
-    //APPCENTER
+    //App Center
     def appCenterSdkVersion = '4.3.1'
     implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
     implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
